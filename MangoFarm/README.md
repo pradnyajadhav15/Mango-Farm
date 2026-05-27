@@ -1,19 +1,23 @@
-# 🥭 Vrundavan Mango Farm — Website
+# Mango Farm — Website
 
-A modern, multi-language website for Vrundavan Mango Farm built with **React + Vite + Tailwind CSS**.
+A modern, multi-language website for Mango Farm (Akkalkot, Solapur) built with **React + Vite + Tailwind CSS**.
 
-## ✨ Features
+## Features
 - Pastel design (cream, sage green, mango orange)
-- Sticky navbar with **Farm Activities dropdown** (8 activities)
+- Sticky navbar with custom logo and **Farm Activities dropdown** (8 activities)
 - Home, About Us, Photo Gallery, Contact pages
-- **Multi-language support** (English, हिन्दी, ગુજરાતી) — add more easily
+- **Multi-language support** (English, हिन्दी, मराठी) — add more easily
+- **WhatsApp ordering** — "Buy Now" buttons + an order form that sends details pre-filled to WhatsApp
+- Free delivery banner, seasonal note, "How to Order" steps, trust badges
+- Customer testimonials and an FAQ section
 - Reusable activity-page template (1 file powers all 8 activity pages)
+- Photo gallery with full-size lightbox
 - Contact form + Google Map + floating WhatsApp button
 - Fully responsive (mobile menu included)
 
 ---
 
-## 🚀 How to run (step by step)
+## How to run (step by step)
 
 ### 1. Install Node.js
 Download the LTS version from https://nodejs.org (one-time install).
@@ -27,67 +31,116 @@ Open the link it prints in your browser. Edit any file and it updates live.
 
 ### 3. Build for production
 ```bash
-npm run build    # creates a /dist folder ready to upload
+npm run build    # creates a /dist folder ready to deploy
 ```
 
 ---
 
-## 🌐 How to put it online (free)
+## Deployment (GitHub + Netlify)
 
-**Easiest — Netlify (drag & drop):**
-1. Run `npm run build`
-2. Go to https://app.netlify.com/drop
-3. Drag the `dist` folder onto the page. Done — you get a live URL.
+The site is deployed on Netlify, connected to GitHub for automatic updates.
 
-**Or connect your domain (vrundavanmangofarm.com):**
-- In Netlify/Vercel → Domain settings → add your domain → follow DNS steps.
+**Important:** the project lives inside the `MangoFarm` subfolder of the repo, so Netlify must be told where to look:
+
+| Netlify setting | Value |
+|-----------------|-------|
+| Base directory | `MangoFarm` |
+| Build command | `npm run build` |
+| Publish directory | `dist` |
+
+### To update the live site
+After changing any file, just run:
+```bash
+git add .
+git commit -m "describe your change"
+git push
+```
+Netlify automatically rebuilds and updates the live site in about a minute.
+
+### Custom domain
+In Netlify → Domain management → add your domain → follow the DNS steps.
 
 ---
 
-## 🛠️ How to customize
+## How to customize
 
 | What | Where |
 |------|-------|
 | Farm activities (text, images) | `src/data/activities.js` |
 | Languages / translations | `src/data/translations.js` |
+| Products, testimonials, FAQ, steps | `src/pages/Home.jsx` (arrays at the top) |
+| WhatsApp number | `src/pages/Home.jsx`, `src/components/WhatsAppButton.jsx` |
 | Colours | `tailwind.config.js` |
 | Founders info | `src/pages/About.jsx` |
 | Gallery photos | `src/pages/Gallery.jsx` |
-| Contact details / WhatsApp number | `src/components/Footer.jsx`, `WhatsAppButton.jsx`, `src/pages/Contact.jsx` |
+| Contact details | `src/components/Footer.jsx`, `src/pages/Contact.jsx` |
+| SEO / share preview | `index.html` (meta tags) |
 
 ### Using your own photos
-Put images in the `public/` folder (e.g. `public/activities/pruning.jpg`)
-then reference them as `/activities/pruning.jpg` in the data files.
+Put images in the `public/` folder, then reference them by path:
+- Hero / welcome / products → `public/images/` → used as `/images/hero.jpg`
+- Farm activities → `public/activities/` → used as `/activities/pruning.jpg`
+- Gallery → `public/gallery/` → used as `/gallery/photo1.jpg`
+- Logo → `public/logo.png`, footer logo → `public/logofooter.png`
+- Share preview image → `public/share-image.jpg` (1200×630)
+- Favicon → `public/favicon.png`
 
-### Making the contact form actually send email
-The form currently just shows a success message. To receive real emails, sign up free at **Formspree.io** and replace the `handleSubmit` in `src/pages/Contact.jsx`.
+Use lowercase filenames with no spaces. Match the file extension in the code.
+
+### WhatsApp ordering
+"Buy Now" buttons and the order form open WhatsApp with a pre-filled message.
+The number is set in `Home.jsx` as `WHATSAPP_NUMBER` (format: country code + number, no `+` or spaces, e.g. `918766977048`).
+
+### Making the contact form send email
+The Contact page form can connect to a free Formspree account. Sign up at
+**Formspree.io**, create a form, and paste your form ID into `handleSubmit` in
+`src/pages/Contact.jsx`.
+
+### SEO & share preview
+Edit the meta tags in `index.html`. The `og:image` and `og:url` must be the full
+live URL (e.g. `https://mango-farm.netlify.app/share-image.jpg`) for WhatsApp/
+Facebook link previews to work.
 
 ---
 
-## 📁 Project structure
-```
-vrundavan/
-├── index.html
+## Project structure
+
+MangoFarm/
+├── index.html              ← SEO meta tags + share preview
 ├── package.json
 ├── tailwind.config.js
 ├── public/
-│   └── _redirects
+│   ├── _redirects          ← fixes routing on Netlify
+│   ├── logo.png
+│   ├── logofooter.png
+│   ├── favicon.png
+│   ├── share-image.jpg
+│   ├── images/             ← hero, welcome, products
+│   ├── activities/         ← 8 farm activity photos
+│   └── gallery/            ← gallery photos
 └── src/
-    ├── main.jsx
-    ├── App.jsx              ← routing
-    ├── index.css
-    ├── LanguageContext.jsx  ← language state
-    ├── components/
-    │   ├── Navbar.jsx
-    │   ├── Footer.jsx
-    │   └── WhatsAppButton.jsx
-    ├── data/
-    │   ├── activities.js    ← all 8 farm activities
-    │   └── translations.js  ← all languages
-    └── pages/
-        ├── Home.jsx
-        ├── About.jsx
-        ├── FarmActivity.jsx ← template for all 8 activities
-        ├── Gallery.jsx
-        └── Contact.jsx
-```
+├── main.jsx
+├── App.jsx              ← routing
+├── index.css
+├── LanguageContext.jsx  ← language state
+├── components/
+│   ├── Navbar.jsx
+│   ├── Footer.jsx
+│   ├── WhatsAppButton.jsx
+│   └── BackToTop.jsx
+├── data/
+│   ├── activities.js    ← all 8 farm activities
+│   └── translations.js  ← all languages (en, hi, mr)
+└── pages/
+├── Home.jsx         ← hero, products, order form, FAQ, testimonials
+├── About.jsx        ← founders, our promise
+├── FarmActivity.jsx ← template for all 8 activities
+├── Gallery.jsx      ← photo gallery with lightbox
+└── Contact.jsx      ← contact form + map
+
+
+---
+
+## About
+Mango Farm grows 100% organic Kesar mangoes in Kini Village, Akkalkot Taluka,
+Solapur District, Maharashtra. Naturally ripened, no chemicals, free delivery.
