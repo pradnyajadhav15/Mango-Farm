@@ -13,7 +13,7 @@ import BackToTop from "./components/BackToTop";
 
 function ScrollToTop() {
   const { pathname } = useLocation();
-  useEffect(() => window.scrollTo(0, 0), [pathname]);
+  useEffect(() => { window.scrollTo(0, 0); }, [pathname]);
   return null;
 }
 
@@ -39,3 +39,4 @@ export default function App() {
     </LanguageProvider>
   );
 }
+
