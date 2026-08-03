@@ -3,12 +3,13 @@
 @tailwind utilities;
 
 html { scroll-behavior: smooth; }
-body { margin: 0; background: #FFF8EE; }
+body { margin: 0; background: #FFF8EE; color: #2B2118; }
 
 @layer utilities {
   .container-x { @apply max-w-6xl mx-auto px-5 md:px-8; }
   .fade-up { animation: fadeUp 0.7s ease both; }
 }
+
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(24px); }
   to { opacity: 1; transform: translateY(0); }
@@ -17,4 +18,54 @@ body { margin: 0; background: #FFF8EE; }
 @layer utilities {
   .reveal { opacity: 0; transform: translateY(30px); transition: all 0.7s ease; }
   .reveal.show { opacity: 1; transform: translateY(0); }
+
+  /* Pinterest-style masonry — no library needed */
+  .masonry { column-count: 2; column-gap: 1rem; }
+  @media (min-width: 768px) { .masonry { column-count: 3; column-gap: 1.25rem; } }
+  .masonry > * { break-inside: avoid; margin-bottom: 1.25rem; }
+
+  /* Card that lifts on hover */
+  .card-lift {
+    @apply transition-all duration-300 ease-out;
+  }
+  .card-lift:hover {
+    transform: translateY(-6px);
+    @apply shadow-warmlg;
+  }
+
+  /* 3D tilt container */
+  .tilt-wrap { perspective: 1000px; }
+  .tilt {
+    transition: transform 0.25s ease-out;
+    transform-style: preserve-3d;
+  }
+
+  /* Warm gradient section backdrop */
+  .bg-orchard {
+    background: linear-gradient(160deg, #FFF8EE 0%, #FBEBD0 55%, #F6D8B8 100%);
+  }
+
+  /* Text gradient for display headings */
+  .text-kesar {
+    background: linear-gradient(95deg, #E8A04C 0%, #C1443A 90%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* Decorative dotted divider */
+  .dot-rule {
+    background-image: radial-gradient(#A8C97F 1.5px, transparent 1.5px);
+    background-size: 14px 14px;
+    height: 14px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
