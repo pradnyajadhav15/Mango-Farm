@@ -11,3 +11,4 @@ dev-dist/
 index.html.bak
 .env
 .env.*
+*.bak*
