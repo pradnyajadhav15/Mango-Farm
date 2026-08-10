@@ -1,7 +1,7 @@
 // Single source of truth for SEO. Imported by React components AND by build scripts.
 // Keep this file free of imports so Node can read it directly.
 
-export const SITE_URL = 'https://mango-farm.netlify.app'; // no trailing slash
+export const SITE_URL = 'https://mango-farm-omega.vercel.app'; // no trailing slash
 export const SITE_NAME = 'Mango Farm';
 export const DEFAULT_IMAGE = '/share-image.jpg';
 export const WHATSAPP_NUMBER = '918766977048';

@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://mango-farm.netlify.app/sitemap.xml
+Sitemap: https://mango-farm-omega.vercel.app/sitemap.xml
