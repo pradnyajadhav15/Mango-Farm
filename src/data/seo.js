@@ -1,11 +1,16 @@
 // Single source of truth for SEO. Imported by React components AND by build scripts.
-// Keep this file free of imports so Node can read it directly.
+import { META_I18N } from './seoI18n.js';
 
-export const SITE_URL = 'https://mango-farm-omega.vercel.app'; // no trailing slash
+export const SITE_URL = 'https://mango-farm-omega.vercel.app';
 export const SITE_NAME = 'Mango Farm';
 export const DEFAULT_IMAGE = '/share-image.jpg';
 export const WHATSAPP_NUMBER = '918766977048';
 export const PHONE = '+918766977048';
+
+export const LANGS = ['en', 'hi', 'mr'];
+export const DEFAULT_LANG = 'en';
+export const HREFLANG = { en: 'en-IN', hi: 'hi-IN', mr: 'mr-IN' };
+export const OG_LOCALE = { en: 'en_IN', hi: 'hi_IN', mr: 'mr_IN' };
 
 export const ACTIVITY_BASE = '/farm-activities';
 
@@ -78,29 +83,80 @@ export const ACTIVITY_META = {
   },
 };
 
+/* ---------- language-aware path helpers ---------- */
+
+// '/hi/about' -> 'hi'   |   '/about' -> 'en'
+export function langFromPath(pathname) {
+  const seg = pathname.split('/')[1];
+  return LANGS.includes(seg) && seg !== DEFAULT_LANG ? seg : DEFAULT_LANG;
+}
+
+// '/hi/about' -> '/about'   |   '/hi' -> '/'
+export function stripLang(pathname) {
+  const parts = pathname.split('/');
+  if (LANGS.includes(parts[1]) && parts[1] !== DEFAULT_LANG) {
+    const rest = '/' + parts.slice(2).join('/');
+    return rest === '/' ? '/' : rest.replace(/\/$/, '');
+  }
+  return pathname === '' ? '/' : pathname;
+}
+
+// ('/about','hi') -> '/hi/about'   |   ('/','hi') -> '/hi'
+export function withLang(basePath, lang) {
+  if (lang === DEFAULT_LANG) return basePath;
+  return basePath === '/' ? '/' + lang : '/' + lang + basePath;
+}
+
 export function titleCase(slug) {
   return slug.split('-').map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
 }
 
-export function metaForPath(path) {
-  if (PAGES[path]) return PAGES[path];
-  if (path.startsWith(ACTIVITY_BASE + '/')) {
-    const slug = path.slice(ACTIVITY_BASE.length + 1);
-    if (ACTIVITY_META[slug]) return ACTIVITY_META[slug];
-    const name = titleCase(slug);
-    return {
-      title: name + ' - Farm Activity',
-      description:
-        'How we do ' + name.toLowerCase() +
-        ' at Mango Farm, our organic Kesar mango orchard in Kini Village, Akkalkot, Solapur.',
-    };
-  }
-  return PAGES['/'];
+// basePath is language-free, e.g. '/about' or '/farm-activities/mulching'
+export function metaForPath(basePath, lang = DEFAULT_LANG) {
+  const isActivity = basePath.startsWith(ACTIVITY_BASE + '/');
+  const slug = isActivity ? basePath.slice(ACTIVITY_BASE.length + 1) : '';
+  const key = isActivity ? slug : basePath;
+
+  const translated = (META_I18N[lang] || {})[key];
+  if (translated && translated.title) return translated;
+
+  if (!isActivity) return PAGES[basePath] || PAGES['/'];
+  if (ACTIVITY_META[slug]) return ACTIVITY_META[slug];
+
+  const name = titleCase(slug);
+  return {
+    title: name + ' - Farm Activity',
+    description:
+      'How we do ' + name.toLowerCase() +
+      ' at Mango Farm, our organic Kesar mango orchard in Kini Village, Akkalkot, Solapur.',
+  };
 }
 
-export function allRoutes() {
+// every language-free route
+export function baseRoutes() {
   return [...Object.keys(PAGES), ...ACTIVITY_SLUGS.map((s) => ACTIVITY_BASE + '/' + s)];
 }
+
+// every real URL: base routes x languages
+export function allRoutes() {
+  const out = [];
+  for (const lang of LANGS) {
+    for (const base of baseRoutes()) out.push({ path: withLang(base, lang), base, lang });
+  }
+  return out;
+}
+
+// hreflang alternates for one base route
+export function alternatesFor(basePath) {
+  const alts = LANGS.map((l) => ({
+    hreflang: HREFLANG[l],
+    href: SITE_URL + withLang(basePath, l),
+  }));
+  alts.push({ hreflang: 'x-default', href: SITE_URL + basePath });
+  return alts;
+}
+
+/* ---------- JSON-LD ---------- */
 
 export function organizationSchema() {
   return {
@@ -124,38 +180,6 @@ export function organizationSchema() {
     },
     areaServed: { '@type': 'Country', name: 'India' },
     sameAs: ['https://wa.me/' + WHATSAPP_NUMBER],
-  };
-}
-
-export function productSchema({ name, description, image, price }) {
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'Product',
-    name,
-    description,
-    image: image ? SITE_URL + image : SITE_URL + DEFAULT_IMAGE,
-    brand: { '@type': 'Brand', name: SITE_NAME },
-    category: 'Fresh Fruit',
-    offers: {
-      '@type': 'Offer',
-      priceCurrency: 'INR',
-      price: String(price ?? ''),
-      availability: 'https://schema.org/InStock',
-      url: SITE_URL,
-      seller: { '@id': SITE_URL + '/#business' },
-    },
-  };
-}
-
-export function faqSchema(faqs) {
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: faqs.map((f) => ({
-      '@type': 'Question',
-      name: f.q,
-      acceptedAnswer: { '@type': 'Answer', text: f.a },
-    })),
   };
 }
 

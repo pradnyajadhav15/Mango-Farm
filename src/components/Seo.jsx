@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { SITE_URL, SITE_NAME, DEFAULT_IMAGE } from '../data/seo';
+import { SITE_URL, SITE_NAME, DEFAULT_IMAGE, OG_LOCALE } from '../data/seo';
 
 function upsertMeta(attr, key, content) {
   if (!content) return;
@@ -14,7 +14,7 @@ function upsertMeta(attr, key, content) {
 
 function upsertLink(rel, href) {
   if (!href) return;
-  let el = document.head.querySelector('link[rel="' + rel + '"]');
+  let el = document.head.querySelector('link[rel="' + rel + '"]:not([hreflang])');
   if (!el) {
     el = document.createElement('link');
     el.setAttribute('rel', rel);
@@ -30,10 +30,12 @@ export default function Seo({
   image = DEFAULT_IMAGE,
   type = 'website',
   lang = 'en',
+  alternates = [],
   jsonLd = null,
   noindex = false,
 }) {
   const jsonLdKey = jsonLd ? JSON.stringify(jsonLd) : '';
+  const altKey = JSON.stringify(alternates);
 
   useEffect(() => {
     const url = SITE_URL + (path === '/' ? '/' : path);
@@ -53,12 +55,22 @@ export default function Seo({
     upsertMeta('property', 'og:type', type);
     upsertMeta('property', 'og:url', url);
     upsertMeta('property', 'og:image', absImage);
-    upsertMeta('property', 'og:locale', lang === 'hi' ? 'hi_IN' : lang === 'mr' ? 'mr_IN' : 'en_IN');
+    upsertMeta('property', 'og:locale', OG_LOCALE[lang] || 'en_IN');
 
     upsertMeta('name', 'twitter:card', 'summary_large_image');
     upsertMeta('name', 'twitter:title', fullTitle);
     upsertMeta('name', 'twitter:description', description);
     upsertMeta('name', 'twitter:image', absImage);
+
+    // hreflang alternates - rebuilt on every route change
+    document.querySelectorAll('link[rel="alternate"][hreflang]').forEach((n) => n.remove());
+    alternates.forEach((a) => {
+      const l = document.createElement('link');
+      l.setAttribute('rel', 'alternate');
+      l.setAttribute('hreflang', a.hreflang);
+      l.setAttribute('href', a.href);
+      document.head.appendChild(l);
+    });
 
     document.querySelectorAll('script[data-seo-jsonld]').forEach((n) => n.remove());
     if (jsonLd) {
@@ -71,7 +83,7 @@ export default function Seo({
         document.head.appendChild(s);
       });
     }
-  }, [title, description, path, image, type, lang, noindex, jsonLdKey]);
+  }, [title, description, path, image, type, lang, noindex, jsonLdKey, altKey]);
 
   return null;
 }

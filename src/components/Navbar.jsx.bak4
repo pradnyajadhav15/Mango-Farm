@@ -3,7 +3,6 @@ import { Link, useLocation , useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { activities } from "../data/activities";
 import { useLang } from "../LanguageContext";
-import { withLang, stripLang } from "../data/seo";
 import { translations } from "../data/translations";
 
 export default function Navbar() {

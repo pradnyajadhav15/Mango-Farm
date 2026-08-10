@@ -1,18 +1,12 @@
 import { useState, useEffect, useRef } from "react";
-import { Link, useLocation , useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { activities } from "../data/activities";
 import { useLang } from "../LanguageContext";
-import { withLang, stripLang } from "../data/seo";
 import { translations } from "../data/translations";
 
 export default function Navbar() {
   const { t, lang, setLang } = useLang();
-  const navigate = useNavigate();
-  const switchLang = (code) => {
-    setLang(code);
-    navigate(withLang(stripLang(loc.pathname), code));
-  };
   const [open, setOpen] = useState(false);
   const [actOpen, setActOpen] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
@@ -76,7 +70,6 @@ export default function Navbar() {
     <>
       <header
         ref={barRef}
-        style={{ top: "var(--mf-banner-h, 0px)" }}
         className={
           "fixed inset-x-0 z-50 transition-all duration-300 " +
           (overHero ? "bg-gradient-to-b from-ink/70 via-ink/30 to-transparent" : "bg-white shadow-warm")
@@ -189,7 +182,7 @@ export default function Navbar() {
                     {Object.keys(translations).map((code) => (
                       <button
                         key={code}
-                        onClick={() => switchLang(code)}
+                        onClick={() => setLang(code)}
                         className={
                           "flex w-full items-center justify-between px-4 py-2 text-left text-sm transition hover:bg-cream " +
                           (lang === code ? "font-medium text-mango" : "text-forest")
@@ -301,7 +294,7 @@ export default function Navbar() {
       </header>
 
       {/* Reserves space on pages with no hero to sit under */}
-      {!isHome && <div style={{ height: `calc(${barHeight}px + var(--mf-banner-h, 0px))` }} />}
+      {!isHome && <div style={{ height: barHeight }} />}
     </>
   );
 }
