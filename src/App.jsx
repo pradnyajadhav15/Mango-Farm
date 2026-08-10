@@ -9,7 +9,9 @@ import About from "./pages/About";
 import FarmActivity from "./pages/FarmActivity";
 import Gallery from "./pages/Gallery";
 import Contact from "./pages/Contact";
-import BackToTop from "./components/BackToTop";
+import BackToTop from "./components/BackToTop";
+import RouteSeo from './components/RouteSeo';
+import PWAPrompt from './components/PWAPrompt';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -24,13 +26,15 @@ export default function App() {
         <ScrollToTop />
         <Navbar />
         <main>
-          <Routes>
+          <RouteSeo />
+      <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<About />} />
             <Route path="/farm-activities/:slug" element={<FarmActivity />} />
             <Route path="/gallery" element={<Gallery />} />
             <Route path="/contact" element={<Contact />} />
           </Routes>
+      <PWAPrompt />
         </main>
         <Footer />
         <WhatsAppButton />

@@ -4,3 +4,10 @@ dist
 *.local
 .env
 .vite
+node_modules/
+dist/
+dev-dist/
+*.bak
+index.html.bak
+.env
+.env.*
