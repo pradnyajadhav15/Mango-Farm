@@ -6,7 +6,7 @@ import { useLang } from "../LanguageContext";
 import DeliveryChecker from "../components/DeliveryChecker";
 import BoxCalculator from "../components/BoxCalculator";
 import Reveal from "../components/Reveal";
-import FloatingMangoes from "../components/FloatingMangoes";
+import HeroArt from "../components/HeroArt";
 import {
   SplitText,
   MaskReveal,
@@ -73,6 +73,18 @@ function BuyButton(props) {
       rel="noreferrer"
       className={props.className}
     >
+      {/* The hero's button carries a disc with an arrow in it; the nudge on
+          hover is the arrow's own, so the pill itself stays still. */}
+      {props.icon ? (
+        <span
+          aria-hidden="true"
+          className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-white text-forest"
+        >
+          <span className="block transition-transform duration-300 ease-out group-hover:translate-x-0.5">
+            &rarr;
+          </span>
+        </span>
+      ) : null}
       {props.label || "Buy Now"}
     </a>
   );
@@ -166,10 +178,8 @@ function Hero({ t }) {
   });
   const eased = useSpring(scrollYProgress, SPRING.glide);
 
-  // Three speeds, all gentle. The earlier version moved the copy 38% and the
-  // fruit 24% while also scaling the photograph on scroll, which is the point
-  // at which parallax stops reading as depth and starts reading as drift.
-  const imageY = useTransform(eased, [0, 1], ["0%", "10%"]);
+  // Two speeds, both gentle. The drawn scene lags the copy slightly, which
+  // is all the depth a flat gradient needs.
   const shapesY = useTransform(eased, [0, 1], ["0%", "-10%"]);
   const copyY = useTransform(eased, [0, 1], ["0%", "18%"]);
   const copyFade = useTransform(eased, [0, 0.7], [1, 0]);
@@ -179,37 +189,18 @@ function Hero({ t }) {
       ref={ref}
       className="relative flex h-[88vh] items-center justify-center overflow-hidden pb-10 text-center"
     >
-      {/* BEAT 1 - the photograph settles. Outer layer handles the load,
-          inner layer answers to the scroll, so the two never contend. */}
-      <motion.div
-        className="absolute inset-0"
-        initial={animate ? { scale: 1.08 } : false}
-        animate={{ scale: 1 }}
-        transition={{ duration: DUR.xl, ease: EASE.soft }}
-      >
-        <motion.img
-          src="/images/hero.jpg"
-          alt="Mango farm"
-          className="h-full w-full object-cover"
-          style={animate ? { y: imageY } : undefined}
-        />
-      </motion.div>
+      {/* BEAT 1 - the ground. A flat orange-to-gold wash, warmest on the
+          left where the pour sits, brightest on the right where the fruit
+          falls. No photograph: the type needs an even field to sit on. */}
+      <div className="absolute inset-0 bg-[linear-gradient(104deg,#F0761B_0%,#F59216_38%,#F9B216_68%,#FBC81C_100%)]" />
 
-      {/* The scrim arrives quickly and early - the words need contrast to
-          land against, so it must not still be fading when they arrive. */}
-      <motion.div
-        className="absolute inset-0 bg-gradient-to-b from-ink/45 via-ink/25 to-ink/60"
-        initial={animate ? { opacity: 0 } : false}
-        animate={{ opacity: 1 }}
-        transition={{ duration: DUR.lg, ease: EASE.out }}
-      />
-
+      {/* The drawn scene, drifting a little slower than the copy above it. */}
       <motion.div className="absolute inset-0" style={animate ? { y: shapesY } : undefined}>
-        <FloatingMangoes />
+        <HeroArt />
       </motion.div>
 
       <motion.div
-        className="relative px-5 pt-24 md:pt-20"
+        className="relative z-10 mx-auto max-w-4xl px-5 pt-16 md:pt-8"
         style={animate ? { y: copyY, opacity: copyFade } : undefined}
       >
         {/* BEAT 2 - the headline. The only word-by-word split on the site;
@@ -221,7 +212,7 @@ function Hero({ t }) {
           delay={0.45}
           stagger={0.075}
           duration={0.9}
-          className="font-display text-3xl font-bold uppercase leading-[1.08] tracking-tight text-white drop-shadow-lg sm:text-4xl md:text-5xl"
+          className="font-display text-3xl font-bold uppercase leading-[1.08] tracking-tight text-white [text-shadow:0_2px_18px_rgba(150,66,0,0.28)] sm:text-4xl md:text-5xl"
         />
 
         {/* BEAT 3 - the subtitle, as one line. Splitting this too meant two
@@ -231,7 +222,7 @@ function Hero({ t }) {
           trigger="load"
           delay={1.0}
           duration={0.75}
-          className="mt-4 block font-display text-2xl italic text-white/90 drop-shadow md:text-4xl"
+          className="mx-auto mt-5 block max-w-2xl font-sans text-base font-normal not-italic text-white/90 [text-shadow:0_1px_10px_rgba(150,66,0,0.25)] md:text-lg"
         />
 
         {/* BEAT 4 - the call to action, once there is something to act on. */}
@@ -240,30 +231,43 @@ function Hero({ t }) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: DUR.md, delay: 1.25, ease: EASE.out }}
         >
-          <Magnetic className="mt-6" strength={10}>
+          <Magnetic className="mt-8" strength={10}>
             <BuyButton
               message="Hi, I want to buy your organic Kesar mangoes."
-              className="btn-press inline-block rounded-full bg-mango px-9 py-3.5 font-medium text-white shadow-lift hover:bg-forest"
+              className="btn-press group inline-flex items-center gap-3 rounded-full bg-forest py-2 pl-2 pr-7 font-medium text-white shadow-[0_14px_30px_-12px_rgba(31,92,11,0.75)] hover:bg-forestdark"
+              icon
             />
           </Magnetic>
         </motion.div>
       </motion.div>
+
+      {/* The base curve: the page ground sweeping up at both edges. It is
+          part of the frame rather than a divider, so it does not animate -
+          a moving horizon under a settling headline reads as instability. */}
+      <svg
+        aria-hidden="true"
+        viewBox="0 0 1440 140"
+        preserveAspectRatio="none"
+        className="absolute inset-x-0 bottom-0 h-[58px] w-full md:h-[104px]"
+      >
+        <path d="M0 26C260 96 520 132 720 132S1180 96 1440 26v114H0Z" fill="#FFF8EE" />
+      </svg>
 
       {/* BEAT 5 - last, and only once the frame has settled: the page keeps
           going. Outer layer owns the scroll fade, inner owns the entrance,
           so the two are never writing opacity at the same time. */}
       <motion.div
         aria-hidden="true"
-        className="absolute bottom-7 left-1/2 -translate-x-1/2"
+        className="absolute bottom-[70px] left-1/2 -translate-x-1/2 md:bottom-[126px]"
         style={animate ? { opacity: copyFade } : undefined}
       >
         <motion.span
-          className="flex h-9 w-[22px] justify-center rounded-full border border-white/40 pt-1.5"
+          className="flex h-9 w-[22px] justify-center rounded-full border border-white/60 pt-1.5"
           initial={animate ? { opacity: 0 } : false}
           animate={{ opacity: 1 }}
           transition={{ duration: DUR.lg, delay: 1.95, ease: EASE.out }}
         >
-          <span className="h-1.5 w-1.5 rounded-full bg-mangolight animate-drop" />
+          <span className="h-1.5 w-1.5 rounded-full bg-white animate-drop" />
         </motion.span>
       </motion.div>
     </section>
