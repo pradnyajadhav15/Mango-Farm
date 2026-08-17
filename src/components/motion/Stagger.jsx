@@ -1,11 +1,14 @@
 import { createElement } from "react";
 import { motion } from "framer-motion";
-import { useMotionSafe, EASE } from "./useMotionSafe";
+import { useMotionSafe, EASE, DUR, DIST, VIEWPORT } from "./useMotionSafe";
 
 /**
- * Grid entrance: the group waits until it is in view, then hands each child
- * its turn. Stagger stays under ~8 items per group so the last card never
- * feels like it is lagging behind the reader.
+ * Grid entrance: the group waits until it is properly in view, then hands
+ * each child its turn.
+ *
+ * The stagger is short on purpose. A long one turns a four-card row into a
+ * queue the reader has to wait out; 60ms reads as one gesture with internal
+ * order, which is what a row of cards actually is.
  *
  * Both halves take an `as` so a staggered list can still be a real <ul>/<li>
  * rather than a pile of divs wearing list clothing.
@@ -13,9 +16,9 @@ import { useMotionSafe, EASE } from "./useMotionSafe";
 export function StaggerGroup({
   children,
   className = "",
-  stagger = 0.08,
+  stagger = 0.06,
   delay = 0,
-  amount = 0.2,
+  amount,
   as = "div",
 }) {
   const animate = useMotionSafe();
@@ -29,7 +32,7 @@ export function StaggerGroup({
       className={className}
       initial="hidden"
       whileInView="show"
-      viewport={{ once: true, amount }}
+      viewport={amount ? { ...VIEWPORT, amount } : VIEWPORT}
       variants={{
         hidden: {},
         show: { transition: { staggerChildren: stagger, delayChildren: delay } },
@@ -41,17 +44,20 @@ export function StaggerGroup({
 }
 
 const PRESETS = {
-  rise: { hidden: { opacity: 0, y: 26 }, show: { opacity: 1, y: 0 } },
-  scale: { hidden: { opacity: 0, y: 18, scale: 0.96 }, show: { opacity: 1, y: 0, scale: 1 } },
+  rise: { hidden: { opacity: 0, y: DIST.md }, show: { opacity: 1, y: 0 } },
+  scale: {
+    hidden: { opacity: 0, y: DIST.sm, scale: 0.985 },
+    show: { opacity: 1, y: 0, scale: 1 },
+  },
   fade: { hidden: { opacity: 0 }, show: { opacity: 1 } },
-  left: { hidden: { opacity: 0, x: -22 }, show: { opacity: 1, x: 0 } },
+  left: { hidden: { opacity: 0, x: -DIST.sm }, show: { opacity: 1, x: 0 } },
 };
 
 export function StaggerItem({
   children,
   className = "",
   preset = "rise",
-  duration = 0.6,
+  duration = DUR.md,
   as = "div",
 }) {
   const animate = useMotionSafe();
@@ -64,7 +70,7 @@ export function StaggerItem({
     <Tag
       className={className}
       variants={PRESETS[preset] || PRESETS.rise}
-      transition={{ duration, ease: EASE }}
+      transition={{ duration, ease: EASE.out }}
     >
       {children}
     </Tag>

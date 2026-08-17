@@ -54,24 +54,20 @@ export default function FloatingMangoes({ className = "" }) {
       aria-hidden="true"
     >
       <Mango
-        className="absolute left-[6%] top-[14%] w-14 text-mango/70 animate-float md:w-20"
+        className="absolute left-[6%] top-[14%] w-14 text-mango/40 animate-float md:w-20"
         style={{ animationDelay: "0s" }}
       />
       <Mango
-        className="absolute right-[9%] top-[22%] w-10 text-mangolight/70 animate-floatslow md:w-14"
+        className="absolute right-[9%] top-[22%] w-10 text-mangolight/40 animate-floatslow md:w-14"
         style={{ animationDelay: "1.4s" }}
       />
       <Mango
-        className="absolute bottom-[16%] left-[16%] w-8 text-mango/50 animate-floatslow md:w-12"
+        className="absolute bottom-[16%] left-[16%] w-8 text-mango/25 animate-floatslow md:w-12"
         style={{ animationDelay: "2.6s" }}
       />
       <Leaf
-        className="absolute right-[18%] bottom-[20%] w-14 text-sage/70 animate-float md:w-20"
+        className="absolute right-[18%] bottom-[20%] w-14 text-sage/35 animate-float md:w-20"
         style={{ animationDelay: "0.8s" }}
-      />
-      <Leaf
-        className="absolute left-[38%] top-[8%] w-10 text-sagelight/60 animate-floatslow md:w-14"
-        style={{ animationDelay: "2s" }}
       />
     </div>
   );

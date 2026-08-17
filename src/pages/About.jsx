@@ -2,7 +2,7 @@ import Reveal from "../components/Reveal";
 import {
   PageHeader,
   SectionHeading,
-  SplitText,
+  MaskReveal,
   Parallax,
   StaggerGroup,
   StaggerItem,
@@ -25,8 +25,8 @@ export default function About() {
       <PageHeader title="About Us" subtitle="The story of Mango Farm" />
 
       <section className="container-x grid items-center gap-10 py-16 md:grid-cols-2">
-        <Reveal preset="mask" duration={0.8}>
-          <Parallax distance={9}>
+        <Reveal preset="mask" duration={0.85}>
+          <Parallax>
             <div className="relative">
               <div className="absolute -left-3 -top-3 h-full w-full rounded-blob border-2 border-sage/40" />
               <img
@@ -39,8 +39,8 @@ export default function About() {
         </Reveal>
         <Reveal delay={0.12}>
           <h2 className="font-display text-3xl font-bold leading-tight text-forest">
-            <SplitText text="Hi, Welcome to" trigger="view" />{" "}
-            <SplitText text="Mango Farm" trigger="view" delay={0.16} className="text-kesar" />
+            <MaskReveal text="Hi, Welcome to" />{" "}
+            <MaskReveal text="Mango Farm" delay={0.12} className="text-kesar" />
           </h2>
           <p className="mt-4 leading-relaxed text-gray-700">
             Kesar mangoes of Mango Farm are a combination of nature and agriculture,
@@ -55,8 +55,8 @@ export default function About() {
         <div className="container-x">
           <SectionHeading>Meet Our Founder</SectionHeading>
           <div className="mt-10 grid items-center gap-8 md:grid-cols-2">
-            <Reveal preset="mask" duration={0.8}>
-              <Parallax distance={8}>
+            <Reveal preset="mask" duration={0.85}>
+              <Parallax>
                 <img
                   src="/images/founder1.jpg"
                   alt="Mr. Suresh Jadhav"
@@ -82,7 +82,7 @@ export default function About() {
 
       <section className="container-x py-16">
         <SectionHeading headingClassName="text-2xl">Our Promise</SectionHeading>
-        <StaggerGroup className="mx-auto mt-10 grid max-w-3xl gap-6 md:grid-cols-2" stagger={0.1}>
+        <StaggerGroup className="mx-auto mt-10 grid max-w-3xl gap-6 md:grid-cols-2" stagger={0.07}>
           {promises.map((p) => (
             <StaggerItem key={p.title} preset="scale" className="h-full">
               <div className="h-full rounded-blob bg-white p-7 shadow-warm card-lift">

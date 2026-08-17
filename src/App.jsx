@@ -51,7 +51,12 @@ function AnimatedRoutes() {
   const location = useLocation();
 
   return (
-    <AnimatePresence mode="wait" initial={false}>
+    // No `initial={false}` here. It reads like "don't animate the very first
+    // route in", but it sets PresenceContext.initial for the whole subtree,
+    // which suppresses every mount animation underneath - the entire hero
+    // entrance included. Scroll-triggered reveals kept working, so the page
+    // looked animated while its opening sequence was silently being skipped.
+    <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
         {LANGS.flatMap((lang) => {
           const prefix = lang === DEFAULT_LANG ? "" : "/" + lang;

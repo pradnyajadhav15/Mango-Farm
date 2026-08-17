@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { useMotionSafe, EASE } from "./useMotionSafe";
+import { useMotionSafe, EASE, DUR, DIST, VIEWPORT } from "./useMotionSafe";
 
 /**
  * The ordering flow, dealt out as a deck.
@@ -41,10 +41,10 @@ export default function StackedSteps({ steps, renderStep, topOffset = 132 }) {
         {steps.map((s, i) => (
           <motion.div
             key={s.n}
-            initial={animate ? { opacity: 0, y: 24 } : false}
+            initial={animate ? { opacity: 0, y: DIST.md } : false}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.55, ease: EASE }}
+            viewport={VIEWPORT}
+            transition={{ duration: DUR.md, ease: EASE.out }}
           >
             {renderStep(s, i)}
           </motion.div>
@@ -75,8 +75,11 @@ function StepCard({ index, total, progress, topOffset, animate, children }) {
   const start = index / total;
   const end = (index + 1) / total;
 
-  const scale = useTransform(progress, [start, end], [1, 0.94]);
-  const opacity = useTransform(progress, [start, end], [1, 0.55]);
+  // The card behind settles back rather than shrinking away: 3% of scale and
+  // a light dim is enough to read as depth. The earlier 6% and 45% dim made
+  // the deck feel like it was collapsing.
+  const scale = useTransform(progress, [start, end], [1, 0.97]);
+  const opacity = useTransform(progress, [start, end], [1, 0.72]);
   const last = index === total - 1;
 
   return (
@@ -99,10 +102,10 @@ function StepCard({ index, total, progress, topOffset, animate, children }) {
         }
       >
         <motion.div
-          initial={animate ? { opacity: 0, y: 30 } : false}
+          initial={animate ? { opacity: 0, y: DIST.md } : false}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.35 }}
-          transition={{ duration: 0.6, ease: EASE }}
+          viewport={VIEWPORT}
+          transition={{ duration: DUR.lg, ease: EASE.soft }}
         >
           {children}
         </motion.div>

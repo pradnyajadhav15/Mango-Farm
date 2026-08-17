@@ -32,7 +32,7 @@ export default {
       keyframes: {
         float: {
           "0%, 100%": { transform: "translateY(0) rotate(0deg)" },
-          "50%": { transform: "translateY(-14px) rotate(4deg)" },
+          "50%": { transform: "translateY(-7px) rotate(2deg)" },
         },
         wiggle: {
           "0%, 92%, 100%": { transform: "rotate(0deg)" },
@@ -50,11 +50,6 @@ export default {
           "0%": { transform: "translate3d(0, 0, 0)" },
           "100%": { transform: "translate3d(-50%, 0, 0)" },
         },
-        // A single pass of light across the season strip.
-        sheen: {
-          "0%": { transform: "translateX(-120%) skewX(-18deg)" },
-          "100%": { transform: "translateX(320%) skewX(-18deg)" },
-        },
         // The scroll cue at the base of the hero.
         drop: {
           "0%": { transform: "translateY(0)", opacity: "0" },
@@ -63,12 +58,11 @@ export default {
         },
       },
       animation: {
-        float: "float 6s ease-in-out infinite",
-        floatslow: "float 9s ease-in-out infinite",
+        float: "float 12s ease-in-out infinite",
+        floatslow: "float 17s ease-in-out infinite",
         wiggle: "wiggle 6s ease-in-out infinite",
         ripen: "ripen 1.6s ease-out both",
-        sheen: "sheen 3.6s ease-in-out infinite",
-        drop: "drop 1.8s ease-in-out infinite",
+        drop: "drop 2.8s cubic-bezier(0.22, 1, 0.36, 1) infinite",
       },
     },
   },

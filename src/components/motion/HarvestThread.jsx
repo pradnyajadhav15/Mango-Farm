@@ -1,6 +1,6 @@
 import { Children, useRef } from "react";
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
-import { useMotionSafe } from "./useMotionSafe";
+import { useMotionSafe, SPRING } from "./useMotionSafe";
 
 /**
  * The page's signature element.
@@ -23,11 +23,7 @@ export default function HarvestThread({ children, className = "" }) {
     target: ref,
     offset: ["start 75%", "end 60%"],
   });
-  const grow = useSpring(scrollYProgress, {
-    stiffness: 120,
-    damping: 30,
-    restDelta: 0.001,
-  });
+  const grow = useSpring(scrollYProgress, { ...SPRING.glide, restDelta: 0.001 });
 
   return (
     <div ref={ref} className={"relative " + className}>
@@ -67,9 +63,9 @@ export default function HarvestThread({ children, className = "" }) {
 function ThreadNode({ index, count, progress, animate, children }) {
   // The node ripens over the slice of the branch it actually sits on.
   const at = count > 1 ? index / (count - 1) : 0;
-  const span = 0.18;
+  const span = 0.26;
 
-  const scale = useTransform(progress, [Math.max(at - span, 0), at], [0.55, 1]);
+  const scale = useTransform(progress, [Math.max(at - span, 0), at], [0.7, 1]);
   const hue = useTransform(
     progress,
     [Math.max(at - span, 0), at],

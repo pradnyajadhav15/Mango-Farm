@@ -29,13 +29,26 @@ body { margin: 0; background: #FFF8EE; color: #2B2118; }
   @media (min-width: 768px) { .masonry { column-count: 3; column-gap: 1.25rem; } }
   .masonry > * { break-inside: avoid; margin-bottom: 1.25rem; }
 
-  /* Card that lifts on hover */
+  /* The single hover treatment for cards, everywhere on the site. This used
+     to run alongside a spring on the same element in some places, so two
+     systems fought over one transform. Now: CSS only, house curve, 4px. */
   .card-lift {
-    @apply transition-all duration-300 ease-out;
+    transition: transform 420ms cubic-bezier(0.22, 1, 0.36, 1),
+                box-shadow 420ms cubic-bezier(0.22, 1, 0.36, 1);
   }
   .card-lift:hover {
-    transform: translateY(-6px);
+    transform: translateY(-4px);
     @apply shadow-warmlg;
+  }
+
+  /* Buttons answer to the pointer on the same curve as everything else. */
+  .btn-press {
+    transition: transform 240ms cubic-bezier(0.22, 1, 0.36, 1),
+                background-color 320ms cubic-bezier(0.22, 1, 0.36, 1),
+                box-shadow 320ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .btn-press:hover {
+    transform: translateY(-2px);
   }
 
   /* 3D tilt container */
@@ -84,19 +97,16 @@ body { margin: 0; background: #FFF8EE; color: #2B2118; }
   /* --- imagery ------------------------------------------------------ */
 
   /* Slow settle applied to section photography as it enters view. */
-  .img-settle {
-    transition: transform 900ms cubic-bezier(0.16, 1, 0.3, 1);
+  .img-zoom {
+    transition: transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
   }
   .group:hover .img-zoom {
-    transform: scale(1.07);
-  }
-  .img-zoom {
-    transition: transform 800ms cubic-bezier(0.16, 1, 0.3, 1);
+    transform: scale(1.04);
   }
 
   /* Answer text easing open once its question is expanded. */
   .faq-in {
-    animation: faqIn 380ms cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation: faqIn 320ms cubic-bezier(0.22, 1, 0.36, 1) both;
   }
 
   /* --- focus -------------------------------------------------------- */

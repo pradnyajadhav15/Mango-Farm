@@ -5,13 +5,16 @@ import { getActivity, activities } from "../data/activities";
 import Reveal from "../components/Reveal";
 import {
   SplitText,
+  MaskReveal,
   SectionHeading,
   Parallax,
   StaggerGroup,
   StaggerItem,
   useMotionSafe,
   EASE,
-  EASE_SOFT,
+  DUR,
+  DIST,
+  SPRING,
 } from "../components/motion";
 
 export default function FarmActivity() {
@@ -24,10 +27,11 @@ export default function FarmActivity() {
     target: bannerRef,
     offset: ["start start", "end start"],
   });
-  const eased = useSpring(scrollYProgress, { stiffness: 140, damping: 34, mass: 0.5 });
-  const bannerY = useTransform(eased, [0, 1], ["0%", "18%"]);
-  const bannerScale = useTransform(eased, [0, 1], [1, 1.1]);
-  const titleY = useTransform(eased, [0, 1], ["0%", "42%"]);
+  // Matched to the home hero, at the same reduced amounts: the banner is
+  // half the height, so anything larger slides visibly against the type.
+  const eased = useSpring(scrollYProgress, SPRING.glide);
+  const bannerY = useTransform(eased, [0, 1], ["0%", "10%"]);
+  const titleY = useTransform(eased, [0, 1], ["0%", "18%"]);
   const titleFade = useTransform(eased, [0, 0.7], [1, 0]);
 
   if (!activity) return <Navigate to="/" replace />;
@@ -43,15 +47,15 @@ export default function FarmActivity() {
       <div ref={bannerRef} className="relative h-[42vh] min-h-[260px] overflow-hidden">
         <motion.div
           className="absolute inset-0"
-          initial={animate ? { scale: 1.12 } : false}
+          initial={animate ? { scale: 1.06 } : false}
           animate={{ scale: 1 }}
-          transition={{ duration: 1.5, ease: EASE_SOFT }}
+          transition={{ duration: DUR.xl, ease: EASE.soft }}
         >
           <motion.img
             src={activity.image}
             alt={activity.title}
             className="h-full w-full object-cover"
-            style={animate ? { y: bannerY, scale: bannerScale } : undefined}
+            style={animate ? { y: bannerY } : undefined}
           />
         </motion.div>
         <div className="absolute inset-0 bg-gradient-to-b from-ink/50 via-ink/35 to-ink/70" />
@@ -62,9 +66,9 @@ export default function FarmActivity() {
           {activity.icon && (
             <motion.div
               className="text-5xl"
-              initial={animate ? { opacity: 0, scale: 0.6 } : false}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5, ease: EASE }}
+              initial={animate ? { opacity: 0, y: DIST.xs } : false}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: DUR.md, delay: 0.15, ease: EASE.out }}
             >
               {activity.icon}
             </motion.div>
@@ -72,14 +76,15 @@ export default function FarmActivity() {
           <SplitText
             as="h1"
             text={activity.title}
-            delay={0.2}
-            stagger={0.06}
+            delay={0.35}
+            stagger={0.07}
+            duration={0.85}
             className="mt-2 font-display text-4xl font-bold text-white drop-shadow-lg md:text-5xl"
           />
-          <SplitText
+          <MaskReveal
             text={activity.tagline}
-            delay={0.5}
-            stagger={0.03}
+            trigger="load"
+            delay={0.85}
             className="mt-2 block font-display text-lg italic text-white/90 drop-shadow"
           />
         </motion.div>
@@ -87,8 +92,8 @@ export default function FarmActivity() {
 
       {/* Content */}
       <section className="container-x grid items-start gap-10 py-16 md:grid-cols-2">
-        <Reveal preset="mask" duration={0.8}>
-          <Parallax distance={9}>
+        <Reveal preset="mask" duration={DUR.lg}>
+          <Parallax>
             <div className="relative">
               <div className="absolute -left-3 -top-3 h-full w-full rounded-blob border-2 border-sage/40" />
               <img
@@ -104,7 +109,7 @@ export default function FarmActivity() {
           <Reveal>
             <p className="text-lg leading-relaxed text-gray-700">{activity.intro}</p>
           </Reveal>
-          <StaggerGroup as="ul" className="mt-7 space-y-4" stagger={0.08} delay={0.1}>
+          <StaggerGroup as="ul" className="mt-7 space-y-4" stagger={0.06} delay={0.08}>
             {activity.points.map((p, i) => (
               <StaggerItem
                 key={i}
@@ -154,10 +159,10 @@ export default function FarmActivity() {
             {activities
               .filter((a) => a.slug !== slug)
               .map((a) => (
-                <StaggerItem key={a.slug} preset="scale" duration={0.45}>
+                <StaggerItem key={a.slug} preset="scale" duration={DUR.sm}>
                   <Link
                     to={`/farm-activities/${a.slug}`}
-                    className="inline-block rounded-full bg-white px-5 py-2 text-sm text-forest shadow-warm transition duration-300 hover:-translate-y-0.5 hover:bg-mango hover:text-white hover:shadow-lift"
+                    className="btn-press inline-block rounded-full bg-white px-5 py-2 text-sm text-forest shadow-warm hover:bg-mango hover:text-white hover:shadow-lift"
                   >
                     {a.icon ? a.icon + " " : ""}
                     {a.title}

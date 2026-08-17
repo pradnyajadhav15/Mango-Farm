@@ -1,30 +1,32 @@
 import { useRef } from "react";
 import { motion, useMotionValue, useSpring } from "framer-motion";
-import { useMotionSafe } from "./useMotionSafe";
+import { useMotionSafe, useFinePointer, SPRING } from "./useMotionSafe";
 
 /**
  * Pulls a control a few pixels toward the cursor while it is hovered, then
- * springs back on leave. The pull is capped well below the control's own
- * padding so the pointer never falls outside the thing it is dragging.
+ * settles back on leave.
  *
- * Pointer-only: touch devices and reduced-motion users get the plain control,
- * which is the right call - there is no cursor to be magnetic toward.
+ * The spring is overdamped, so the control tracks the pointer and stops -
+ * the earlier one was light enough to ring slightly after a fast exit, which
+ * is the difference between a control that feels weighted and one that feels
+ * springy. The pull is also capped well below the control's own padding, so
+ * the pointer never falls outside the thing it is dragging.
  */
-export default function Magnetic({ children, strength = 14, className = "" }) {
+export default function Magnetic({ children, strength = 10, className = "" }) {
   const ref = useRef(null);
   const animate = useMotionSafe();
+  const fine = useFinePointer();
 
   const mx = useMotionValue(0);
   const my = useMotionValue(0);
-  const x = useSpring(mx, { stiffness: 220, damping: 18, mass: 0.35 });
-  const y = useSpring(my, { stiffness: 220, damping: 18, mass: 0.35 });
+  const x = useSpring(mx, SPRING.drift);
+  const y = useSpring(my, SPRING.drift);
 
-  if (!animate) {
-    return <div className={"inline-block " + className}>{children}</div>;
-  }
+  // One element tree either way - see SpotlightCard for why.
+  const active = animate && fine;
 
   const onMove = (e) => {
-    if (e.pointerType === "touch") return;
+    if (!active) return;
     const r = ref.current.getBoundingClientRect();
     mx.set(((e.clientX - r.left) / r.width - 0.5) * strength * 2);
     my.set(((e.clientY - r.top) / r.height - 0.5) * strength);
@@ -39,7 +41,7 @@ export default function Magnetic({ children, strength = 14, className = "" }) {
     <motion.div
       ref={ref}
       className={"inline-block " + className}
-      style={{ x, y }}
+      style={active ? { x, y } : undefined}
       onPointerMove={onMove}
       onPointerLeave={reset}
       onBlur={reset}

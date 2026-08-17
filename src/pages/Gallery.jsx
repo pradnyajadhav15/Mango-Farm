@@ -1,6 +1,6 @@
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { PageHeader, StaggerGroup, StaggerItem } from "../components/motion";
+import { PageHeader, StaggerGroup, StaggerItem, EASE, DUR } from "../components/motion";
 
 const photos = [
   "/gallery/photo1.jpg",
@@ -60,7 +60,7 @@ export default function Gallery() {
       <section className="container-x py-16">
         {/* Photos arrive a column at a time rather than all at once, so the
             eye is led across the wall instead of ambushed by it. */}
-        <StaggerGroup className="columns-2 gap-4 md:columns-3 lg:columns-4" stagger={0.05} amount={0.05}>
+        <StaggerGroup className="columns-2 gap-4 md:columns-3 lg:columns-4" stagger={0.045} amount={0.05}>
           {photos.map((src, i) => (
             <StaggerItem key={src} preset="scale" className="mb-4 break-inside-avoid">
               <button
@@ -96,7 +96,7 @@ export default function Gallery() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.25 }}
+            transition={{ duration: DUR.xs, ease: EASE.out }}
             role="dialog"
             aria-modal="true"
             aria-label="Photo viewer"
@@ -133,7 +133,7 @@ export default function Gallery() {
               className="max-h-[86vh] max-w-[92vw] rounded-soft shadow-warmlg"
               initial={{ opacity: 0, scale: 0.96 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: DUR.sm, ease: EASE.out }}
             />
 
             <p className="absolute bottom-6 text-sm tracking-wide text-white/70">
