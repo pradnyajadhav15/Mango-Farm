@@ -1,5 +1,12 @@
-import { motion } from "framer-motion";
 import Reveal from "../components/Reveal";
+import {
+  PageHeader,
+  SectionHeading,
+  SplitText,
+  Parallax,
+  StaggerGroup,
+  StaggerItem,
+} from "../components/motion";
 
 const promises = [
   {
@@ -12,53 +19,28 @@ const promises = [
   },
 ];
 
-function SectionRule() {
-  return (
-    <div className="mx-auto mt-4 flex w-32 items-center gap-2">
-      <span className="dot-rule flex-1 rounded-full opacity-70" />
-      <span className="h-2 w-2 rotate-45 rounded-[2px] bg-mango" />
-      <span className="dot-rule flex-1 rounded-full opacity-70" />
-    </div>
-  );
-}
-
 export default function About() {
   return (
     <div className="bg-creamlight">
-      <div className="bg-orchard py-14 text-center">
-        <motion.h1
-          className="font-display text-4xl font-bold text-forest md:text-5xl"
-          initial={{ opacity: 0, y: 18 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-        >
-          About Us
-        </motion.h1>
-        <motion.p
-          className="mt-2 text-gray-600"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.15 }}
-        >
-          The story of Mango Farm
-        </motion.p>
-        <SectionRule />
-      </div>
+      <PageHeader title="About Us" subtitle="The story of Mango Farm" />
 
       <section className="container-x grid items-center gap-10 py-16 md:grid-cols-2">
-        <Reveal>
-          <div className="relative">
-            <div className="absolute -left-3 -top-3 h-full w-full rounded-blob border-2 border-sage/40" />
-            <img
-              src="/images/about-farm.jpg"
-              alt="Farm"
-              className="relative h-80 w-full rounded-blob object-cover shadow-warm"
-            />
-          </div>
+        <Reveal preset="mask" duration={0.8}>
+          <Parallax distance={9}>
+            <div className="relative">
+              <div className="absolute -left-3 -top-3 h-full w-full rounded-blob border-2 border-sage/40" />
+              <img
+                src="/images/about-farm.jpg"
+                alt="Farm"
+                className="relative h-80 w-full rounded-blob object-cover shadow-warm"
+              />
+            </div>
+          </Parallax>
         </Reveal>
         <Reveal delay={0.12}>
           <h2 className="font-display text-3xl font-bold leading-tight text-forest">
-            Hi, Welcome to <span className="text-kesar">Mango Farm</span>
+            <SplitText text="Hi, Welcome to" trigger="view" />{" "}
+            <SplitText text="Mango Farm" trigger="view" delay={0.16} className="text-kesar" />
           </h2>
           <p className="mt-4 leading-relaxed text-gray-700">
             Kesar mangoes of Mango Farm are a combination of nature and agriculture,
@@ -71,17 +53,16 @@ export default function About() {
 
       <section className="bg-cream py-16">
         <div className="container-x">
-          <Reveal>
-            <h2 className="text-center font-display text-3xl font-bold text-forest">Meet Our Founder</h2>
-            <SectionRule />
-          </Reveal>
+          <SectionHeading>Meet Our Founder</SectionHeading>
           <div className="mt-10 grid items-center gap-8 md:grid-cols-2">
-            <Reveal>
-              <img
-                src="/images/founder1.jpg"
-                alt="Mr. Suresh Jadhav"
-                className="h-80 w-full rounded-blob object-cover shadow-warm"
-              />
+            <Reveal preset="mask" duration={0.8}>
+              <Parallax distance={8}>
+                <img
+                  src="/images/founder1.jpg"
+                  alt="Mr. Suresh Jadhav"
+                  className="h-80 w-full rounded-blob object-cover shadow-warm"
+                />
+              </Parallax>
             </Reveal>
             <Reveal delay={0.12}>
               <h3 className="font-display text-2xl font-bold text-forest">Mr. Suresh Jadhav</h3>
@@ -100,21 +81,18 @@ export default function About() {
       </section>
 
       <section className="container-x py-16">
-        <Reveal>
-          <h2 className="text-center font-display text-2xl font-bold text-forest">Our Promise</h2>
-          <SectionRule />
-        </Reveal>
-        <div className="mx-auto mt-10 grid max-w-3xl gap-6 md:grid-cols-2">
-          {promises.map((p, i) => (
-            <Reveal key={p.title} delay={i * 0.1}>
+        <SectionHeading headingClassName="text-2xl">Our Promise</SectionHeading>
+        <StaggerGroup className="mx-auto mt-10 grid max-w-3xl gap-6 md:grid-cols-2" stagger={0.1}>
+          {promises.map((p) => (
+            <StaggerItem key={p.title} preset="scale" className="h-full">
               <div className="h-full rounded-blob bg-white p-7 shadow-warm card-lift">
                 <div className="mb-3 h-1.5 w-10 rounded-full bg-mango" />
                 <h3 className="font-display text-lg font-semibold text-forest">{p.title}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-gray-600">{p.text}</p>
               </div>
-            </Reveal>
+            </StaggerItem>
           ))}
-        </div>
+        </StaggerGroup>
       </section>
     </div>
   );

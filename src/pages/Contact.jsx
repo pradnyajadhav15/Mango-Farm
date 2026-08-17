@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { useLang } from "../LanguageContext";
 import Reveal from "../components/Reveal";
+import { PageHeader, SplitText, StaggerGroup, StaggerItem } from "../components/motion";
 
 export default function Contact() {
   const { t } = useLang();
@@ -37,34 +38,23 @@ export default function Contact() {
 
   return (
     <div className="bg-creamlight">
-      <div className="bg-orchard py-14 text-center">
-        <motion.h1
-          className="font-display text-4xl font-bold text-forest md:text-5xl"
-          initial={{ opacity: 0, y: 18 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-        >
-          {t.contact.title}
-        </motion.h1>
-        <motion.p
-          className="mt-2 text-gray-600"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.15 }}
-        >
-          We'd love to hear from you
-        </motion.p>
-        <div className="mx-auto mt-4 flex w-32 items-center gap-2">
-          <span className="dot-rule flex-1 rounded-full opacity-70" />
-          <span className="h-2 w-2 rotate-45 rounded-[2px] bg-mango" />
-          <span className="dot-rule flex-1 rounded-full opacity-70" />
-        </div>
-      </div>
+      <PageHeader title={t.contact.title} subtitle="We'd love to hear from you" />
 
       <section className="container-x grid gap-10 py-16 md:grid-cols-2">
         <Reveal>
-          <h2 className="font-display text-2xl font-bold text-forest">Get in touch</h2>
-          <span className="mt-2 block h-1 w-12 rounded-full bg-mango" />
+          <SplitText
+            as="h2"
+            text="Get in touch"
+            trigger="view"
+            className="font-display text-2xl font-bold text-forest"
+          />
+          <motion.span
+            className="mt-2 block h-1 w-12 origin-left rounded-full bg-mango"
+            initial={{ scaleX: 0 }}
+            whileInView={{ scaleX: 1 }}
+            viewport={{ once: true, amount: 0.8 }}
+            transition={{ duration: 0.5, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
+          />
 
           <div className="mt-6 space-y-3 text-gray-700">
             <p className="flex gap-3">
@@ -104,23 +94,36 @@ export default function Contact() {
                 <p className="mt-4 font-medium text-forest">Thank you! We'll get back to you soon.</p>
               </motion.div>
             ) : (
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <input name="first_name" required placeholder={t.contact.name} className={field} />
-                  <input name="last_name" required placeholder={t.contact.last} className={field} />
-                </div>
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <input name="email" required type="email" placeholder={t.contact.email} className={field} />
-                  <input name="phone" placeholder={t.contact.phone} className={field} />
-                </div>
-                <textarea name="message" rows={4} placeholder={t.contact.message} className={"w-full " + field} />
-                <button
-                  type="submit"
-                  disabled={busy}
-                  className="w-full rounded-xl bg-forest py-3 font-medium text-cream shadow-warm transition hover:bg-mango hover:shadow-lift disabled:opacity-60"
-                >
-                  {busy ? "Sending..." : t.contact.submit}
-                </button>
+              <form onSubmit={handleSubmit}>
+                <StaggerGroup className="space-y-4" stagger={0.07} amount={0.2}>
+                  <StaggerItem>
+                    <div className="grid gap-4 sm:grid-cols-2">
+                      <input name="first_name" required placeholder={t.contact.name} className={field} />
+                      <input name="last_name" required placeholder={t.contact.last} className={field} />
+                    </div>
+                  </StaggerItem>
+                  <StaggerItem>
+                    <div className="grid gap-4 sm:grid-cols-2">
+                      <input name="email" required type="email" placeholder={t.contact.email} className={field} />
+                      <input name="phone" placeholder={t.contact.phone} className={field} />
+                    </div>
+                  </StaggerItem>
+                  <StaggerItem>
+                    <textarea name="message" rows={4} placeholder={t.contact.message} className={"w-full " + field} />
+                  </StaggerItem>
+                  <StaggerItem>
+                    <motion.button
+                      type="submit"
+                      disabled={busy}
+                      className="w-full rounded-xl bg-forest py-3 font-medium text-cream shadow-warm transition-colors duration-300 hover:bg-mango disabled:opacity-60"
+                      whileHover={{ y: -2 }}
+                      whileTap={{ scale: 0.985 }}
+                      transition={{ type: "spring", stiffness: 320, damping: 22 }}
+                    >
+                      {busy ? "Sending..." : t.contact.submit}
+                    </motion.button>
+                  </StaggerItem>
+                </StaggerGroup>
               </form>
             )}
           </div>
