@@ -42,9 +42,17 @@ function Leaf({ className = "", style = {} }) {
   );
 }
 
-export default function FloatingMangoes() {
+/**
+ * The drifting fruit sit on a scroll-linked layer supplied by the hero, so
+ * they fall away at their own speed as the page moves. Each shape keeps its
+ * own idle float on top of that.
+ */
+export default function FloatingMangoes({ className = "" }) {
   return (
-    <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+    <div
+      className={"pointer-events-none absolute inset-0 overflow-hidden " + className}
+      aria-hidden="true"
+    >
       <Mango
         className="absolute left-[6%] top-[14%] w-14 text-mango/70 animate-float md:w-20"
         style={{ animationDelay: "0s" }}

@@ -1,5 +1,8 @@
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { useEffect } from "react";
+import { AnimatePresence } from "framer-motion";
+import ScrollProgress from "./components/motion/ScrollProgress";
+import PageTransition from "./components/motion/PageTransition";
 import { LanguageProvider, useLang } from "./LanguageContext";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
@@ -42,28 +45,41 @@ const PAGE_ROUTES = [
   { path: "/contact", element: <Contact /> },
 ];
 
+// Routes are keyed on the path so the outgoing page can finish leaving
+// before the incoming one arrives.
+function AnimatedRoutes() {
+  const location = useLocation();
+
+  return (
+    <AnimatePresence mode="wait" initial={false}>
+      <Routes location={location} key={location.pathname}>
+        {LANGS.flatMap((lang) => {
+          const prefix = lang === DEFAULT_LANG ? "" : "/" + lang;
+          return PAGE_ROUTES.map((r) => (
+            <Route
+              key={lang + r.path}
+              path={(prefix + r.path) || "/"}
+              element={<PageTransition>{r.element}</PageTransition>}
+            />
+          ));
+        })}
+      </Routes>
+    </AnimatePresence>
+  );
+}
+
 export default function App() {
   return (
     <LanguageProvider>
       <BrowserRouter>
+        <ScrollProgress />
         <ScrollToTop />
         <LangSync />
         <SeasonBanner />
         <Navbar />
         <main style={{ paddingTop: "var(--mf-banner-h, 0px)" }}>
           <RouteSeo />
-          <Routes>
-            {LANGS.flatMap((lang) => {
-              const prefix = lang === DEFAULT_LANG ? "" : "/" + lang;
-              return PAGE_ROUTES.map((r) => (
-                <Route
-                  key={lang + r.path}
-                  path={(prefix + r.path) || "/"}
-                  element={r.element}
-                />
-              ));
-            })}
-          </Routes>
+          <AnimatedRoutes />
           <PWAPrompt />
           <PreBookingModal />
         </main>

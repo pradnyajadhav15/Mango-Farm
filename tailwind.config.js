@@ -44,12 +44,31 @@ export default {
           "0%": { filter: "hue-rotate(-35deg) saturate(0.7)" },
           "100%": { filter: "hue-rotate(0deg) saturate(1)" },
         },
+        // The ticker track holds two copies of its row, so travelling
+        // exactly half its width lands the loop back where it started.
+        marquee: {
+          "0%": { transform: "translate3d(0, 0, 0)" },
+          "100%": { transform: "translate3d(-50%, 0, 0)" },
+        },
+        // A single pass of light across the season strip.
+        sheen: {
+          "0%": { transform: "translateX(-120%) skewX(-18deg)" },
+          "100%": { transform: "translateX(320%) skewX(-18deg)" },
+        },
+        // The scroll cue at the base of the hero.
+        drop: {
+          "0%": { transform: "translateY(0)", opacity: "0" },
+          "35%": { opacity: "1" },
+          "100%": { transform: "translateY(14px)", opacity: "0" },
+        },
       },
       animation: {
         float: "float 6s ease-in-out infinite",
         floatslow: "float 9s ease-in-out infinite",
         wiggle: "wiggle 6s ease-in-out infinite",
         ripen: "ripen 1.6s ease-out both",
+        sheen: "sheen 3.6s ease-in-out infinite",
+        drop: "drop 1.8s ease-in-out infinite",
       },
     },
   },

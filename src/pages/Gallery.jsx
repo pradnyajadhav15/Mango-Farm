@@ -1,5 +1,6 @@
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { PageHeader, StaggerGroup, StaggerItem } from "../components/motion";
 
 const photos = [
   "/gallery/photo1.jpg",
@@ -53,60 +54,37 @@ export default function Gallery() {
   return (
     <div className="bg-creamlight">
       {/* ---------- HEADER ---------- */}
-      <div className="bg-orchard py-14 text-center">
-        <motion.h1
-          className="font-display text-4xl font-bold text-forest md:text-5xl"
-          initial={{ opacity: 0, y: 18 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-        >
-          Photo Gallery
-        </motion.h1>
-        <motion.p
-          className="mt-2 text-gray-600"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.15 }}
-        >
-          Glimpses of life at Mango Farm
-        </motion.p>
-        <div className="mx-auto mt-4 flex w-32 items-center gap-2">
-          <span className="dot-rule flex-1 rounded-full opacity-70" />
-          <span className="h-2 w-2 rotate-45 rounded-[2px] bg-mango" />
-          <span className="dot-rule flex-1 rounded-full opacity-70" />
-        </div>
-      </div>
+      <PageHeader title="Photo Gallery" subtitle="Glimpses of life at Mango Farm" />
 
       {/* ---------- MASONRY GRID ---------- */}
       <section className="container-x py-16">
-        <div className="columns-2 gap-4 md:columns-3 lg:columns-4">
+        {/* Photos arrive a column at a time rather than all at once, so the
+            eye is led across the wall instead of ambushed by it. */}
+        <StaggerGroup className="columns-2 gap-4 md:columns-3 lg:columns-4" stagger={0.05} amount={0.05}>
           {photos.map((src, i) => (
-            <motion.button
-              key={src}
-              type="button"
-              onClick={() => setIndex(i)}
-              className="group mb-4 block w-full break-inside-avoid overflow-hidden rounded-blob shadow-warm focus:outline-none focus-visible:ring-4 focus-visible:ring-mango/60"
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.1 }}
-              transition={{ duration: 0.55, delay: (i % 4) * 0.06, ease: [0.22, 1, 0.36, 1] }}
-            >
-              <div className="relative">
-                <img
-                  src={src}
-                  alt={"Farm " + (i + 1)}
-                  loading="lazy"
-                  className="w-full transition duration-700 ease-out group-hover:scale-105"
-                />
-                {/* Warm wash + zoom cue on hover */}
-                <div className="absolute inset-0 bg-gradient-to-t from-ink/50 via-transparent to-transparent opacity-0 transition duration-500 group-hover:opacity-100" />
-                <span className="absolute bottom-3 right-3 grid h-9 w-9 translate-y-2 place-items-center rounded-full bg-white/90 text-forest opacity-0 shadow-warm transition duration-500 group-hover:translate-y-0 group-hover:opacity-100">
-                  &#43;
-                </span>
-              </div>
-            </motion.button>
+            <StaggerItem key={src} preset="scale" className="mb-4 break-inside-avoid">
+              <button
+                type="button"
+                onClick={() => setIndex(i)}
+                className="group block w-full overflow-hidden rounded-blob shadow-warm focus:outline-none focus-visible:ring-4 focus-visible:ring-mango/60"
+              >
+                <div className="relative">
+                  <img
+                    src={src}
+                    alt={"Farm " + (i + 1)}
+                    loading="lazy"
+                    className="img-zoom w-full"
+                  />
+                  {/* Warm wash + zoom cue on hover */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-ink/50 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+                  <span className="absolute bottom-3 right-3 grid h-9 w-9 translate-y-2 place-items-center rounded-full bg-white/90 text-forest opacity-0 shadow-warm transition duration-500 group-hover:translate-y-0 group-hover:opacity-100">
+                    &#43;
+                  </span>
+                </div>
+              </button>
+            </StaggerItem>
           ))}
-        </div>
+        </StaggerGroup>
       </section>
 
       {/* ---------- LIGHTBOX ---------- */}
