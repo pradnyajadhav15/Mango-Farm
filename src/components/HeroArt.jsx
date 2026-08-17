@@ -21,11 +21,32 @@ export function ArtDefs() {
   return (
     <svg width="0" height="0" className="absolute" aria-hidden="true">
       <defs>
-        <linearGradient id="mf-skin" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#FFF0B0" />
-          <stop offset="42%" stopColor="#FFD23F" />
-          <stop offset="100%" stopColor="#E8620E" />
-        </linearGradient>
+        {/* Body light comes from the upper left, so the gradient is radial and
+            off-centre rather than a flat diagonal ramp. A linear ramp is what
+            made the first pass read as a beach ball. */}
+        <radialGradient id="mf-skin" cx="34%" cy="26%" r="86%">
+          <stop offset="0%" stopColor="#FFF6C2" />
+          <stop offset="26%" stopColor="#FFDE55" />
+          <stop offset="58%" stopColor="#F9AE18" />
+          <stop offset="84%" stopColor="#EE7C0C" />
+          <stop offset="100%" stopColor="#C94A06" />
+        </radialGradient>
+        {/* The ripe flush a Kesar carries on its shoulder. */}
+        <radialGradient id="mf-blush" cx="72%" cy="16%" r="52%">
+          <stop offset="0%" stopColor="#E23B14" stopOpacity="0.5" />
+          <stop offset="100%" stopColor="#E23B14" stopOpacity="0" />
+        </radialGradient>
+        {/* Specular highlight - soft, not a white blob. */}
+        <radialGradient id="mf-spec" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stopColor="#FFFDF0" stopOpacity="0.9" />
+          <stop offset="55%" stopColor="#FFF6C8" stopOpacity="0.35" />
+          <stop offset="100%" stopColor="#FFF6C8" stopOpacity="0" />
+        </radialGradient>
+        {/* Contact shading along the lower right, away from the light. */}
+        <radialGradient id="mf-occ" cx="72%" cy="80%" r="56%">
+          <stop offset="0%" stopColor="#8A2E02" stopOpacity="0.42" />
+          <stop offset="100%" stopColor="#8A2E02" stopOpacity="0" />
+        </radialGradient>
         <linearGradient id="mf-flesh" x1="10%" y1="0%" x2="90%" y2="100%">
           <stop offset="0%" stopColor="#FFE9A8" />
           <stop offset="55%" stopColor="#FFC93C" />
@@ -45,41 +66,64 @@ export function ArtDefs() {
   );
 }
 
+/**
+ * A Kesar: broad at the shoulder, tapering to a blunt beak at the lower
+ * left, with the flush on the sunward side. Built in layers the way the
+ * fruit actually reads - body, flush, occlusion, then the specular last.
+ */
 function Mango({ className = "", style }) {
+  const body =
+    "M94 18c30 16 40 54 33 92-7 37-33 60-64 58-29-2-51-23-56-53-6-37 9-70 33-90 16-13 37-16 54-7z";
+
   return (
-    <svg viewBox="0 0 120 150" className={className} style={style} aria-hidden="true">
-      <path
-        d="M78 12c26 10 40 42 36 78-4 34-28 56-56 54C30 142 8 118 8 84 8 46 42 0 78 12z"
-        fill="url(#mf-skin)"
-      />
-      <path
-        d="M78 12c-18 14-28 40-26 70 2 26 12 46 26 62-22-6-36-30-38-60C38 52 54 24 78 12z"
-        fill="#B45309"
-        opacity="0.07"
-      />
-      <ellipse cx="83" cy="48" rx="11" ry="19" fill="#FFF7DC" opacity="0.34" transform="rotate(24 83 48)" />
-      <path d="M70 12c2-6 8-10 18-11-2 8-8 12-18 13z" fill="url(#mf-leaf)" />
+    <svg viewBox="0 0 140 180" className={className} style={style} aria-hidden="true">
+      <path d={body} fill="url(#mf-skin)" />
+      <path d={body} fill="url(#mf-blush)" />
+      <path d={body} fill="url(#mf-occ)" />
+
+      {/* the long soft catch-light down the shoulder */}
+      <ellipse cx="58" cy="58" rx="19" ry="31" fill="url(#mf-spec)" transform="rotate(-24 58 58)" />
+      {/* a tighter glint inside it */}
+      <ellipse cx="52" cy="46" rx="7" ry="12" fill="#FFFEF6" opacity="0.55" transform="rotate(-26 52 46)" />
+
+      {/* lenticels - the freckling that stops the skin reading as plastic */}
+      <g fill="#B4550A" opacity="0.16">
+        <circle cx="88" cy="62" r="1.6" />
+        <circle cx="99" cy="86" r="1.3" />
+        <circle cx="80" cy="104" r="1.5" />
+        <circle cx="95" cy="122" r="1.2" />
+        <circle cx="66" cy="128" r="1.4" />
+      </g>
+
+      {/* stem and a single leaf at the shoulder */}
+      <path d="M86 20c1-7 5-12 12-15-1 8-4 13-9 16z" fill="#7A4A12" />
+      <path d="M96 8c8-6 19-7 29-3-6 9-17 13-29 8z" fill="url(#mf-leaf)" />
     </svg>
   );
 }
 
-/* A cut cheek, flesh toward the viewer - the shape in the splash cluster. */
+/**
+ * A cut cheek, flesh toward the viewer: a thin skin rim, then flesh that
+ * lightens toward the centre where the knife went deepest. The concentric
+ * ovals of the first pass looked like a target, so the flesh is offset from
+ * the rim and lit from the same upper left as everything else.
+ */
 function MangoSlice({ className = "", style }) {
   return (
-    <svg viewBox="0 0 120 140" className={className} style={style} aria-hidden="true">
+    <svg viewBox="0 0 130 150" className={className} style={style} aria-hidden="true">
+      {/* skin rim */}
       <path
-        d="M60 4c34 0 56 34 56 70 0 38-24 62-56 62S4 112 4 74C4 38 26 4 60 4z"
+        d="M66 4c36 0 60 36 60 74 0 40-26 68-60 68S6 118 6 78C6 40 30 4 66 4z"
         fill="url(#mf-skin)"
       />
+      {/* cut face, sitting slightly high and left of the rim */}
       <path
-        d="M60 16c26 0 44 26 44 56 0 30-19 50-44 50s-44-20-44-50c0-30 18-56 44-56z"
-        fill="#FFD766"
+        d="M63 15c30 0 50 30 50 62 0 33-21 56-50 56S14 110 14 77c0-32 19-62 49-62z"
+        fill="url(#mf-flesh)"
       />
-      <path
-        d="M60 30c19 0 32 20 32 42s-14 38-32 38-32-16-32-38 13-42 32-42z"
-        fill="#FFE9A8"
-        opacity="0.75"
-      />
+      {/* the softer, wetter centre */}
+      <ellipse cx="57" cy="70" rx="30" ry="40" fill="#FFF0B8" opacity="0.62" />
+      <ellipse cx="52" cy="58" rx="14" ry="20" fill="#FFFAE2" opacity="0.5" />
     </svg>
   );
 }
@@ -93,24 +137,41 @@ function Leaf({ className = "", style }) {
   );
 }
 
-/* The juice pour on the left: one flowing body plus a few thrown droplets. */
+/**
+ * The pour on the left: a ribbon of juice curling down, thrown droplets
+ * around it.
+ *
+ * The first version was a single fat teardrop, which at this scale read as
+ * an enormous leaf. A ribbon works because liquid is legible by its edge -
+ * a curved band of varying width with a bright inner rim, not a blob.
+ */
 function Splash({ className = "", style }) {
   return (
-    <svg viewBox="0 0 220 320" className={className} style={style} aria-hidden="true">
+    <svg viewBox="0 0 240 340" className={className} style={style} aria-hidden="true">
+      {/* the falling band, wide at the lip and tapering as it drops */}
       <path
-        d="M120 8c34 26 44 72 30 118-12 40-44 62-52 100-6 30 6 56 6 84-34-18-62-52-70-96C24 160 44 96 82 52 96 36 108 20 120 8z"
+        d="M172 4c-46 34-80 76-96 126-17 54-8 106 24 148-52-28-82-88-72-150C39 68 96 24 172 4z"
         fill="url(#mf-juice)"
       />
+      {/* the curl where it turns back on itself */}
       <path
-        d="M104 60c-22 30-32 70-24 108 6 30 22 54 32 78-24-20-42-52-46-90-4-40 10-72 38-96z"
-        fill="#FFF3C4"
-        opacity="0.28"
+        d="M100 278c26 26 62 38 100 34-20 20-52 26-84 14-16-6-28-16-36-28z"
+        fill="url(#mf-juice)"
       />
-      <circle cx="168" cy="70" r="9" fill="url(#mf-juice)" />
-      <circle cx="186" cy="128" r="6" fill="url(#mf-juice)" />
-      <circle cx="160" cy="196" r="11" fill="url(#mf-juice)" />
-      <circle cx="182" cy="252" r="5" fill="url(#mf-juice)" />
-      <circle cx="44" cy="96" r="7" fill="url(#mf-juice)" />
+      {/* bright inner rim - the edge that makes it read as liquid */}
+      <path
+        d="M150 34c-34 30-58 66-70 108-12 42-7 82 13 116-28-28-40-74-30-124C72 96 106 58 150 34z"
+        fill="#FFF6D2"
+        opacity="0.34"
+      />
+      {/* thrown droplets, sized down as they travel out */}
+      <circle cx="188" cy="74" r="10" fill="url(#mf-juice)" />
+      <circle cx="206" cy="132" r="6" fill="url(#mf-juice)" />
+      <circle cx="180" cy="196" r="12" fill="url(#mf-juice)" />
+      <circle cx="212" cy="238" r="5" fill="url(#mf-juice)" />
+      <circle cx="46" cy="112" r="8" fill="url(#mf-juice)" />
+      <circle cx="30" cy="182" r="5" fill="url(#mf-juice)" />
+      <circle cx="74" cy="318" r="7" fill="url(#mf-juice)" />
     </svg>
   );
 }
@@ -148,51 +209,51 @@ export default function HeroArt() {
 
       {/* leaves along the top edge - they drop first and fastest */}
       <Piece from={{ opacity: 0, y: -34, rotate: -18 }} delay={0.15} duration={DUR.lg}
-        className="left-[13%] top-[14%] w-12 md:w-16" float="animate-float">
+        className="left-[13%] top-[14%] w-12 md:w-16" float="animate-driftC">
         <Leaf />
       </Piece>
       <Piece from={{ opacity: 0, y: -30, rotate: 40 }} delay={0.22} duration={DUR.lg} rotate={18}
-        className="left-[27%] top-[9%] w-10 md:w-14" float="animate-floatslow">
+        className="left-[27%] top-[9%] w-10 md:w-14" float="animate-driftB">
         <Leaf />
       </Piece>
       <Piece from={{ opacity: 0, y: -36, rotate: -2 }} delay={0.3} duration={DUR.lg} rotate={-24}
-        className="left-[44%] top-[12%] w-11 md:w-14" float="animate-float">
+        className="left-[44%] top-[12%] w-11 md:w-14" float="animate-driftC">
         <Leaf />
       </Piece>
       <Piece from={{ opacity: 0, y: -32, rotate: 54 }} delay={0.38} duration={DUR.lg} rotate={32}
-        className="right-[30%] top-[10%] hidden w-12 sm:block md:w-16" float="animate-floatslow">
+        className="right-[30%] top-[10%] hidden w-12 sm:block md:w-16" float="animate-driftB">
         <Leaf />
       </Piece>
       <Piece from={{ opacity: 0, y: -28, rotate: 6 }} delay={0.46} duration={DUR.lg} rotate={-14}
-        className="right-[22%] top-[17%] hidden w-10 sm:block md:w-14" float="animate-float">
+        className="right-[22%] top-[17%] hidden w-10 sm:block md:w-14" float="animate-driftC">
         <Leaf />
       </Piece>
 
       {/* the fruit, falling in from the top right */}
       <Piece from={{ opacity: 0, y: -90, rotate: -12 }} delay={0.3} rotate={14}
-        className="right-[3%] top-[9%] w-24 md:w-40" float="animate-float">
+        className="right-[3%] top-[9%] w-24 md:w-40" float="animate-driftA">
         <Mango />
       </Piece>
       <Piece from={{ opacity: 0, y: -110, rotate: 4 }} delay={0.44} rotate={-18}
-        className="right-[16%] top-[30%] hidden w-20 sm:block md:w-32" float="animate-floatslow">
+        className="right-[16%] top-[30%] hidden w-20 sm:block md:w-32" float="animate-driftB">
         <Mango />
       </Piece>
       <Piece from={{ opacity: 0, y: -80, rotate: 2 }} delay={0.56} rotate={28}
-        className="right-[7%] top-[50%] w-16 md:w-28" float="animate-floatslow">
+        className="right-[7%] top-[50%] w-16 md:w-28" float="animate-driftB">
         <Mango />
       </Piece>
 
       {/* the pour on the left, with two cut cheeks riding it */}
       <Piece from={{ opacity: 0, x: -40, scale: 0.9 }} delay={0.35} duration={1.5}
-        className="-left-[4%] top-[16%] hidden w-44 md:block lg:w-60" float="animate-floatslow">
+        className="-left-[4%] top-[16%] hidden w-44 md:block lg:w-60" float="animate-driftB">
         <Splash />
       </Piece>
       <Piece from={{ opacity: 0, x: -30, y: 24, rotate: -34 }} delay={0.5} rotate={-16}
-        className="left-[6%] top-[44%] hidden w-24 md:block lg:w-28" float="animate-float">
+        className="left-[6%] top-[44%] hidden w-24 md:block lg:w-28" float="animate-driftC">
         <MangoSlice />
       </Piece>
       <Piece from={{ opacity: 0, x: -24, y: 30, rotate: 40 }} delay={0.62} rotate={22}
-        className="left-[15%] top-[64%] hidden w-16 lg:block" float="animate-floatslow">
+        className="left-[15%] top-[64%] hidden w-16 lg:block" float="animate-driftA">
         <MangoSlice />
       </Piece>
     </div>
