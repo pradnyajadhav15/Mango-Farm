@@ -199,7 +199,12 @@ function Piece({ from, delay, duration = DUR.xl, rotate = 0, className, float, c
   );
 }
 
-export default function HeroArt() {
+/**
+ * `foliage` draws the leaves and the juice pour. With the video canopy
+ * behind it those repeat what the footage already shows, so the hero asks
+ * for fruit only and lets the film supply the greenery.
+ */
+export default function HeroArt({ foliage = true }) {
   return (
     <div
       className="pointer-events-none absolute inset-0 overflow-hidden [&_svg]:[filter:drop-shadow(0_14px_22px_rgba(124,48,0,0.28))]"
@@ -207,6 +212,8 @@ export default function HeroArt() {
     >
       <ArtDefs />
 
+      {foliage && (
+      <>
       {/* leaves along the top edge - they drop first and fastest */}
       <Piece from={{ opacity: 0, y: -34, rotate: -18 }} delay={0.15} duration={DUR.lg}
         className="left-[13%] top-[14%] w-12 md:w-16" float="animate-driftC">
@@ -229,6 +236,9 @@ export default function HeroArt() {
         <Leaf />
       </Piece>
 
+      </>
+      )}
+
       {/* the fruit, falling in from the top right */}
       <Piece from={{ opacity: 0, y: -90, rotate: -12 }} delay={0.3} rotate={14}
         className="right-[3%] top-[9%] w-24 md:w-40" float="animate-driftA">
@@ -243,6 +253,8 @@ export default function HeroArt() {
         <Mango />
       </Piece>
 
+      {foliage && (
+      <>
       {/* the pour on the left, with two cut cheeks riding it */}
       <Piece from={{ opacity: 0, x: -40, scale: 0.9 }} delay={0.35} duration={1.5}
         className="-left-[4%] top-[16%] hidden w-44 md:block lg:w-60" float="animate-driftB">
@@ -256,6 +268,8 @@ export default function HeroArt() {
         className="left-[15%] top-[64%] hidden w-16 lg:block" float="animate-driftA">
         <MangoSlice />
       </Piece>
+      </>
+      )}
     </div>
   );
 }

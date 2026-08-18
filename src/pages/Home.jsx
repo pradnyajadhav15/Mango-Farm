@@ -189,14 +189,54 @@ function Hero({ t }) {
       ref={ref}
       className="relative flex h-[88vh] items-center justify-center overflow-hidden pb-10 text-center"
     >
-      {/* BEAT 1 - the ground. A flat orange-to-gold wash, warmest on the
-          left where the pour sits, brightest on the right where the fruit
-          falls. No photograph: the type needs an even field to sit on. */}
+      {/* BEAT 1 - the ground.
+          The gradient stays as the base layer: it paints instantly, covers
+          the moment before the video decodes, and is what remains if the
+          video fails or the browser refuses to autoplay. */}
       <div className="absolute inset-0 bg-[linear-gradient(104deg,#F0761B_0%,#F59216_38%,#F9B216_68%,#FBC81C_100%)]" />
+
+      {/* The footage sits on top of it. Muted, inline and looping, so it
+          autoplays under every current browser policy. Reduced motion gets
+          the poster frame instead - a looping background is exactly the kind
+          of motion that setting is asking us to stop. */}
+      {animate ? (
+        <video
+          className="absolute inset-0 h-full w-full object-cover"
+          poster="/images/hero-poster.jpg"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          aria-hidden="true"
+          tabIndex={-1}
+        >
+          {/* H.264 first for the widest reach; builds compiled without the
+              proprietary decoders (some Linux Chromium and Firefox packages)
+              skip it and take the VP9 instead. Without the second source
+              those users get the poster and never know there was a video. */}
+          <source src="/videos/hero-loop.mp4" type="video/mp4" />
+          <source src="/videos/hero-loop.webm" type="video/webm" />
+        </video>
+      ) : (
+        <img
+          className="absolute inset-0 h-full w-full object-cover"
+          src="/images/hero-poster.jpg"
+          alt=""
+          aria-hidden="true"
+        />
+      )}
+
+      {/* Brand wash over the footage - the clip is cream and mid-green, which
+          white type cannot sit on. Multiply keeps the leaves reading as
+          leaves instead of flattening them behind a grey scrim. */}
+      <div className="absolute inset-0 bg-[linear-gradient(104deg,#F0761B_0%,#F59216_38%,#F9B216_68%,#FBC81C_100%)] opacity-[0.82] mix-blend-multiply" />
+      {/* and a light vignette purely for headline contrast */}
+      <div className="absolute inset-0 bg-[radial-gradient(70%_60%_at_50%_45%,rgba(120,45,0,0.30)_0%,rgba(120,45,0,0.05)_70%)]" />
 
       {/* The drawn scene, drifting a little slower than the copy above it. */}
       <motion.div className="absolute inset-0" style={animate ? { y: shapesY } : undefined}>
-        <HeroArt />
+        <HeroArt foliage={false} />
       </motion.div>
 
       <motion.div
