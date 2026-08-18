@@ -1,5 +1,7 @@
-export { useMotionSafe, EASE, EASE_SOFT } from "./useMotionSafe";
+export { useMotionSafe, useFinePointer } from "./useMotionSafe";
+export { EASE, DUR, DIST, SPRING, VIEWPORT } from "./tokens";
 export { default as SplitText } from "./SplitText";
+export { default as MaskReveal } from "./MaskReveal";
 export { default as Marquee } from "./Marquee";
 export { default as Parallax } from "./Parallax";
 export { default as Magnetic } from "./Magnetic";

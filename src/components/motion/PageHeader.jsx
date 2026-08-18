@@ -1,31 +1,31 @@
 import { motion } from "framer-motion";
-import SplitText from "./SplitText";
+import MaskReveal from "./MaskReveal";
 import { DrawnRule } from "./SectionHeading";
-import { useMotionSafe, EASE } from "./useMotionSafe";
+import { useMotionSafe, EASE, DUR, DIST } from "./useMotionSafe";
 
 /**
- * The banner every inner page opens with. It is the section heading from the
- * home page at a larger size, so arriving on About or Gallery feels like
- * staying inside the same site rather than landing somewhere else.
+ * The banner every inner page opens with: the same single-line rise as the
+ * section headings, just larger. Word-by-word splitting is reserved for the
+ * two image heroes, so these read as arrivals rather than as events.
  */
 export default function PageHeader({ title, subtitle, className = "" }) {
   const animate = useMotionSafe();
 
   return (
     <div className={"bg-orchard py-14 text-center " + className}>
-      <SplitText
+      <MaskReveal
         as="h1"
         text={title}
-        stagger={0.06}
-        duration={0.8}
+        trigger="load"
+        duration={DUR.lg}
         className="font-display text-4xl font-bold text-forest md:text-5xl"
       />
       {subtitle ? (
         <motion.p
           className="mt-2 text-gray-600"
-          initial={animate ? { opacity: 0, y: 10 } : false}
+          initial={animate ? { opacity: 0, y: DIST.xs } : false}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.35, ease: EASE }}
+          transition={{ duration: DUR.md, delay: 0.3, ease: EASE.out }}
         >
           {subtitle}
         </motion.p>

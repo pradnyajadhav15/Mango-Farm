@@ -32,7 +32,7 @@ export default {
       keyframes: {
         float: {
           "0%, 100%": { transform: "translateY(0) rotate(0deg)" },
-          "50%": { transform: "translateY(-14px) rotate(4deg)" },
+          "50%": { transform: "translateY(-7px) rotate(2deg)" },
         },
         wiggle: {
           "0%, 92%, 100%": { transform: "rotate(0deg)" },
@@ -50,10 +50,22 @@ export default {
           "0%": { transform: "translate3d(0, 0, 0)" },
           "100%": { transform: "translate3d(-50%, 0, 0)" },
         },
-        // A single pass of light across the season strip.
-        sheen: {
-          "0%": { transform: "translateX(-120%) skewX(-18deg)" },
-          "100%": { transform: "translateX(320%) skewX(-18deg)" },
+        // Suspended fruit: a slow bob with a little sway and roll. Three
+        // variants so no two pieces in a cluster move together.
+        driftA: {
+          "0%, 100%": { transform: "translate3d(0, 0, 0) rotate(0deg)" },
+          "30%": { transform: "translate3d(-5px, -13px, 0) rotate(-3.2deg)" },
+          "62%": { transform: "translate3d(4px, 7px, 0) rotate(2.4deg)" },
+        },
+        driftB: {
+          "0%, 100%": { transform: "translate3d(0, 0, 0) rotate(0deg)" },
+          "38%": { transform: "translate3d(6px, 10px, 0) rotate(2.8deg)" },
+          "70%": { transform: "translate3d(-3px, -9px, 0) rotate(-2deg)" },
+        },
+        driftC: {
+          "0%, 100%": { transform: "translate3d(0, 0, 0) rotate(0deg)" },
+          "26%": { transform: "translate3d(3px, -8px, 0) rotate(2.2deg)" },
+          "58%": { transform: "translate3d(-6px, 9px, 0) rotate(-3deg)" },
         },
         // The scroll cue at the base of the hero.
         drop: {
@@ -63,12 +75,14 @@ export default {
         },
       },
       animation: {
-        float: "float 6s ease-in-out infinite",
-        floatslow: "float 9s ease-in-out infinite",
+        float: "float 12s ease-in-out infinite",
+        floatslow: "float 17s ease-in-out infinite",
         wiggle: "wiggle 6s ease-in-out infinite",
         ripen: "ripen 1.6s ease-out both",
-        sheen: "sheen 3.6s ease-in-out infinite",
-        drop: "drop 1.8s ease-in-out infinite",
+        drop: "drop 2.8s cubic-bezier(0.22, 1, 0.36, 1) infinite",
+        driftA: "driftA 11s ease-in-out infinite",
+        driftB: "driftB 14s ease-in-out infinite",
+        driftC: "driftC 9s ease-in-out infinite",
       },
     },
   },

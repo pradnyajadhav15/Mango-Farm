@@ -1,5 +1,5 @@
 import { motion, useScroll, useSpring } from "framer-motion";
-import { useMotionSafe } from "./useMotionSafe";
+import { useMotionSafe, SPRING } from "./useMotionSafe";
 
 /**
  * A thin ripening bar across the very top of the window that fills from
@@ -9,18 +9,14 @@ import { useMotionSafe } from "./useMotionSafe";
 export default function ScrollProgress() {
   const animate = useMotionSafe();
   const { scrollYProgress } = useScroll();
-  const scaleX = useSpring(scrollYProgress, {
-    stiffness: 160,
-    damping: 28,
-    restDelta: 0.001,
-  });
+  const scaleX = useSpring(scrollYProgress, { ...SPRING.glide, restDelta: 0.001 });
 
   if (!animate) return null;
 
   return (
     <motion.div
       aria-hidden="true"
-      className="fixed inset-x-0 top-0 z-[60] h-[3px] origin-left bg-gradient-to-r from-forest via-sage to-mango"
+      className="fixed inset-x-0 top-0 z-[60] h-[2px] origin-left bg-gradient-to-r from-forest via-sage to-mango"
       style={{ scaleX }}
     />
   );

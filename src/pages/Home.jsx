@@ -6,9 +6,9 @@ import { useLang } from "../LanguageContext";
 import DeliveryChecker from "../components/DeliveryChecker";
 import BoxCalculator from "../components/BoxCalculator";
 import Reveal from "../components/Reveal";
-import FloatingMangoes, { TiltCard } from "../components/FloatingMangoes";
 import {
   SplitText,
+  MaskReveal,
   SectionHeading,
   Marquee,
   Magnetic,
@@ -20,7 +20,10 @@ import {
   StaggerItem,
   useMotionSafe,
   EASE,
-  EASE_SOFT,
+  DUR,
+  DIST,
+  SPRING,
+  VIEWPORT,
 } from "../components/motion";
 
 const whyPoints = [
@@ -69,6 +72,18 @@ function BuyButton(props) {
       rel="noreferrer"
       className={props.className}
     >
+      {/* The hero's button carries a disc with an arrow in it; the nudge on
+          hover is the arrow's own, so the pill itself stays still. */}
+      {props.icon ? (
+        <span
+          aria-hidden="true"
+          className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-white text-forest"
+        >
+          <span className="block transition-transform duration-300 ease-out group-hover:translate-x-0.5">
+            &rarr;
+          </span>
+        </span>
+      ) : null}
       {props.label || "Buy Now"}
     </a>
   );
@@ -97,57 +112,48 @@ function OrderForm() {
       <div className="container-x">
         <SectionHeading>Place Your Order</SectionHeading>
 
-        <Reveal delay={0.1} preset="scale">
+        {/* The card arrives as one object. Staggering the fields made the
+            form assemble itself in front of the reader, which is motion for
+            its own sake - a form is a single thing to fill in, not a
+            sequence to watch. */}
+        <Reveal delay={0.08} preset="scale">
           <div className="mx-auto mt-10 max-w-xl space-y-4 rounded-blob bg-white p-8 shadow-warm">
-            <StaggerGroup className="space-y-4" stagger={0.06} amount={0.25}>
-              <StaggerItem>
-                <input
-                  name="name"
-                  value={form.name}
-                  onChange={handleChange}
-                  placeholder="Your Name"
-                  className={field}
-                />
-              </StaggerItem>
-              <StaggerItem>
-                <select name="product" value={form.product} onChange={handleChange} className={field}>
-                  <option>Organic Kesar Mango Cubes</option>
-                  <option>Organic Kesar Mango Pulp</option>
-                  <option>Raw Mango</option>
-                  <option>Fresh Kesar Mango (Box)</option>
-                </select>
-              </StaggerItem>
-              <StaggerItem>
-                <input
-                  name="qty"
-                  value={form.qty}
-                  onChange={handleChange}
-                  placeholder="Quantity (e.g. 5 kg or 2 boxes)"
-                  className={field}
-                />
-              </StaggerItem>
-              <StaggerItem>
-                <textarea
-                  name="address"
-                  value={form.address}
-                  onChange={handleChange}
-                  rows={3}
-                  placeholder="Delivery Address"
-                  className={field}
-                />
-              </StaggerItem>
-              <StaggerItem>
-                <motion.button
-                  onClick={sendOrder}
-                  className="w-full rounded-xl bg-forest py-3 font-medium text-cream shadow-warm transition-colors duration-300 hover:bg-mango"
-                  whileHover={{ y: -2 }}
-                  whileTap={{ scale: 0.985 }}
-                  transition={{ type: "spring", stiffness: 320, damping: 22 }}
-                >
-                  Send Order on WhatsApp
-                </motion.button>
-              </StaggerItem>
-            </StaggerGroup>
+            <input
+              name="name"
+              value={form.name}
+              onChange={handleChange}
+              placeholder="Your Name"
+              className={field}
+            />
+            <select name="product" value={form.product} onChange={handleChange} className={field}>
+              <option>Organic Kesar Mango Cubes</option>
+              <option>Organic Kesar Mango Pulp</option>
+              <option>Raw Mango</option>
+              <option>Fresh Kesar Mango (Box)</option>
+            </select>
+            <input
+              name="qty"
+              value={form.qty}
+              onChange={handleChange}
+              placeholder="Quantity (e.g. 5 kg or 2 boxes)"
+              className={field}
+            />
+            <textarea
+              name="address"
+              value={form.address}
+              onChange={handleChange}
+              rows={3}
+              placeholder="Delivery Address"
+              className={field}
+            />
+            <motion.button
+              onClick={sendOrder}
+              className="btn-press w-full rounded-xl bg-forest py-3 font-medium text-cream shadow-warm hover:bg-mango"
+              whileTap={{ scale: 0.99 }}
+              transition={{ type: "spring", ...SPRING.press }}
+            >
+              Send Order on WhatsApp
+            </motion.button>
           </div>
         </Reveal>
       </div>
@@ -169,95 +175,138 @@ function Hero({ t }) {
     target: ref,
     offset: ["start start", "end start"],
   });
-  const eased = useSpring(scrollYProgress, { stiffness: 140, damping: 34, mass: 0.5 });
+  const eased = useSpring(scrollYProgress, SPRING.glide);
 
-  const imageY = useTransform(eased, [0, 1], ["0%", "16%"]);
-  const imageScale = useTransform(eased, [0, 1], [1, 1.12]);
-  const shapesY = useTransform(eased, [0, 1], ["0%", "-24%"]);
-  const copyY = useTransform(eased, [0, 1], ["0%", "38%"]);
-  const copyFade = useTransform(eased, [0, 0.62], [1, 0]);
-
-  const scrollStyle = animate ? { y: imageY, scale: imageScale } : undefined;
+  // The copy lifts away over the footage; the footage itself holds still,
+  // since a video already carries its own motion.
+  const copyY = useTransform(eased, [0, 1], ["0%", "18%"]);
+  const copyFade = useTransform(eased, [0, 0.7], [1, 0]);
 
   return (
     <section
       ref={ref}
       className="relative flex h-[88vh] items-center justify-center overflow-hidden pb-10 text-center"
     >
-      {/* outer layer settles on load, inner layer answers to the scroll */}
-      <motion.div
-        className="absolute inset-0"
-        initial={animate ? { scale: 1.16 } : false}
-        animate={{ scale: 1 }}
-        transition={{ duration: 1.7, ease: EASE_SOFT }}
-      >
-        <motion.img
-          src="/images/hero.jpg"
-          alt="Mango farm"
-          className="h-full w-full object-cover"
-          style={scrollStyle}
+      {/* BEAT 1 - the ground.
+          The gradient stays as the base layer: it paints instantly, covers
+          the moment before the video decodes, and is what remains if the
+          video fails or the browser refuses to autoplay. */}
+      <div className="absolute inset-0 bg-[linear-gradient(104deg,#F0761B_0%,#F59216_38%,#F9B216_68%,#FBC81C_100%)]" />
+
+      {/* The footage sits on top of it. Muted, inline and looping, so it
+          autoplays under every current browser policy. Reduced motion gets
+          the poster frame instead - a looping background is exactly the kind
+          of motion that setting is asking us to stop. */}
+      {animate ? (
+        <video
+          className="absolute inset-0 h-full w-full object-cover"
+          poster="/images/hero-poster.jpg"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          aria-hidden="true"
+          tabIndex={-1}
+        >
+          {/* H.264 first for the widest reach; builds compiled without the
+              proprietary decoders (some Linux Chromium and Firefox packages)
+              skip it and take the VP9 instead. Without the second source
+              those users get the poster and never know there was a video. */}
+          <source src="/videos/hero-loop.mp4" type="video/mp4" />
+          <source src="/videos/hero-loop.webm" type="video/webm" />
+        </video>
+      ) : (
+        <img
+          className="absolute inset-0 h-full w-full object-cover"
+          src="/images/hero-poster.jpg"
+          alt=""
+          aria-hidden="true"
         />
-      </motion.div>
+      )}
+
+      {/* No colour wash over the footage - it plays at its own colour.
+          What stays is a neutral scrim behind the type only: the clip's
+          lower half is near-white, and white type on it is unreadable.
+          Kept as low as contrast allows and pinned to the centre band, so
+          the leaves top and bottom stay untouched. */}
+      <div className="absolute inset-0 bg-[radial-gradient(58%_42%_at_50%_44%,rgba(20,12,4,0.46)_0%,rgba(20,12,4,0.22)_55%,rgba(20,12,4,0)_100%)]" />
 
       <motion.div
-        className="absolute inset-0 bg-gradient-to-b from-ink/45 via-ink/25 to-ink/60"
-        initial={animate ? { opacity: 0 } : false}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1.1 }}
-      />
-
-      <motion.div className="absolute inset-0" style={animate ? { y: shapesY } : undefined}>
-        <FloatingMangoes />
-      </motion.div>
-
-      <motion.div
-        className="relative px-5 pt-24 md:pt-20"
+        className="relative z-10 mx-auto max-w-4xl px-5 pt-16 md:pt-8"
         style={animate ? { y: copyY, opacity: copyFade } : undefined}
       >
+        {/* BEAT 2 - the headline. The only word-by-word split on the site;
+            everything else rises as one piece, so this reads as the moment
+            rather than as the house style. */}
         <SplitText
           as="h1"
           text={t.hero.title}
-          delay={0.28}
-          stagger={0.07}
+          delay={0.45}
+          stagger={0.075}
           duration={0.9}
-          className="font-display text-3xl font-bold uppercase leading-[1.08] tracking-tight text-white drop-shadow-lg sm:text-4xl md:text-5xl"
+          className="font-display text-3xl font-bold uppercase leading-[1.08] tracking-tight text-white [text-shadow:0_2px_18px_rgba(150,66,0,0.28)] sm:text-4xl md:text-5xl"
         />
 
-        <SplitText
+        {/* BEAT 3 - the subtitle, as one line. Splitting this too meant two
+            word-level animations overlapping and neither being legible. */}
+        <MaskReveal
           text={t.hero.subtitle}
-          delay={0.62}
-          stagger={0.035}
-          duration={0.7}
-          className="mt-4 block font-display text-2xl italic text-white/90 drop-shadow md:text-4xl"
+          trigger="load"
+          delay={1.0}
+          duration={0.75}
+          className="mx-auto mt-5 block max-w-2xl font-sans text-base font-normal not-italic text-white/90 [text-shadow:0_1px_10px_rgba(150,66,0,0.25)] md:text-lg"
         />
 
+        {/* BEAT 4 - the call to action, once there is something to act on. */}
         <motion.div
-          initial={animate ? { opacity: 0, y: 18 } : false}
+          initial={animate ? { opacity: 0, y: DIST.sm } : false}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.95, ease: EASE }}
+          transition={{ duration: DUR.md, delay: 1.25, ease: EASE.out }}
         >
-          <Magnetic className="mt-6" strength={12}>
+          <Magnetic className="mt-8" strength={10}>
             <BuyButton
               message="Hi, I want to buy your organic Kesar mangoes."
-              className="inline-block rounded-full bg-mango px-9 py-3.5 font-medium text-white shadow-lift transition-colors duration-300 hover:bg-forest"
+              className="btn-press group inline-flex items-center gap-3 rounded-full bg-forest py-2 pl-2 pr-7 font-medium text-white shadow-[0_14px_30px_-12px_rgba(31,92,11,0.75)] hover:bg-forestdark"
+              icon
             />
           </Magnetic>
         </motion.div>
       </motion.div>
 
-      {/* A falling drop of light at the base of the frame: the page keeps
-          going, and the next section is where the value is explained. */}
+      {/* The base curve: the page ground sweeping up at both edges. It is
+          part of the frame rather than a divider, so it does not animate -
+          a moving horizon under a settling headline reads as instability.
+
+          The shadow above it earns its place: the curve is the page's own
+          cream, and wherever the footage runs pale the two match and the
+          sweep disappears. The shadow gives it an edge to read against
+          whatever frame happens to be playing. */}
+      <svg
+        aria-hidden="true"
+        viewBox="0 0 1440 140"
+        preserveAspectRatio="none"
+        className="absolute inset-x-0 bottom-0 h-[58px] w-full drop-shadow-[0_-6px_16px_rgba(23,45,10,0.28)] md:h-[104px]"
+      >
+        <path d="M0 26C260 96 520 132 720 132S1180 96 1440 26v114H0Z" fill="#FFF8EE" />
+      </svg>
+
+      {/* BEAT 5 - last, and only once the frame has settled: the page keeps
+          going. Outer layer owns the scroll fade, inner owns the entrance,
+          so the two are never writing opacity at the same time. */}
       <motion.div
         aria-hidden="true"
-        className="absolute bottom-7 left-1/2 -translate-x-1/2"
-        initial={animate ? { opacity: 0 } : false}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.6, delay: 1.4 }}
+        className="absolute bottom-[70px] left-1/2 -translate-x-1/2 md:bottom-[126px]"
         style={animate ? { opacity: copyFade } : undefined}
       >
-        <span className="flex h-9 w-[22px] justify-center rounded-full border border-white/50 pt-1.5">
-          <span className="h-1.5 w-1.5 rounded-full bg-mangolight animate-drop" />
-        </span>
+        <motion.span
+          className="flex h-9 w-[22px] justify-center rounded-full border border-white/60 pt-1.5"
+          initial={animate ? { opacity: 0 } : false}
+          animate={{ opacity: 1 }}
+          transition={{ duration: DUR.lg, delay: 1.95, ease: EASE.out }}
+        >
+          <span className="h-1.5 w-1.5 rounded-full bg-white animate-drop" />
+        </motion.span>
       </motion.div>
     </section>
   );
@@ -276,18 +325,12 @@ export default function Home() {
           The one promise worth repeating, so it repeats: a ticker that
           holds still the moment a pointer or the keyboard reaches it. */}
       <div className="relative overflow-hidden bg-mango py-3 font-medium tracking-wide text-white">
-        <Marquee speed={30} repeat={3} fade>
+        <Marquee speed={52} repeat={3} fade>
           <span className="flex shrink-0 items-center gap-10 whitespace-nowrap">
             Free Delivery on All Orders &mdash; Farm Fresh, Straight to Your Door!
             <span aria-hidden="true" className="h-2 w-2 rotate-45 rounded-[2px] bg-white/70" />
           </span>
         </Marquee>
-        {animate && (
-          <span
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-y-0 left-0 w-20 bg-white/25 blur-md animate-sheen"
-          />
-        )}
       </div>
 
       {/* ---------- DELIVERY CHECKER ---------- */}
@@ -303,14 +346,14 @@ export default function Home() {
       <section className="bg-creamlight py-16">
         <div className="container-x grid items-center gap-10 md:grid-cols-2">
           <Reveal preset="mask" duration={0.8}>
-            <Parallax distance={9}>
+            <Parallax>
               <div className="relative">
                 <motion.div
                   className="absolute -left-3 -top-3 h-full w-full rounded-blob border-2 border-sage/40"
                   initial={animate ? { opacity: 0, x: 14, y: 14 } : false}
                   whileInView={{ opacity: 1, x: 0, y: 0 }}
-                  viewport={{ once: true, amount: 0.4 }}
-                  transition={{ duration: 0.8, delay: 0.15, ease: EASE }}
+                  viewport={VIEWPORT}
+                  transition={{ duration: DUR.lg, delay: 0.12, ease: EASE.out }}
                 />
                 <img
                   src="/images/welcome.jpg"
@@ -323,13 +366,8 @@ export default function Home() {
 
           <div>
             <h2 className="font-display text-3xl font-bold leading-tight text-forest">
-              <SplitText text={t.welcome.hi} trigger="view" className="block" />
-              <SplitText
-                text={t.welcome.farm}
-                trigger="view"
-                delay={0.18}
-                className="block text-kesar"
-              />
+              <MaskReveal text={t.welcome.hi} className="block" />
+              <MaskReveal text={t.welcome.farm} delay={0.12} className="block text-kesar" />
             </h2>
             <Reveal delay={0.28}>
               <p className="mt-5 leading-relaxed text-gray-700">
@@ -354,10 +392,7 @@ export default function Home() {
         <div className="container-x">
           <SectionHeading>{t.sections.activities}</SectionHeading>
 
-          <StaggerGroup
-            className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4"
-            stagger={0.07}
-          >
+          <StaggerGroup className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4" stagger={0.06}>
             {activities.map((a) => (
               <StaggerItem key={a.slug} preset="scale" className="h-full">
                 <Link
@@ -397,10 +432,10 @@ export default function Home() {
               <motion.div
                 key={i}
                 className="flex gap-4 border-b border-sage/40 pb-4"
-                initial={animate ? { opacity: 0, y: 20 } : false}
+                initial={animate ? { opacity: 0, y: DIST.xs } : false}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.5 }}
-                transition={{ duration: 0.55, ease: EASE }}
+                viewport={VIEWPORT}
+                transition={{ duration: DUR.md, ease: EASE.out }}
               >
                 <div className="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-mango/20 text-sm font-bold text-mango sm:hidden">
                   &#10003;
@@ -417,7 +452,7 @@ export default function Home() {
         <div className="container-x">
           <SectionHeading headingClassName="text-2xl">{t.sections.products}</SectionHeading>
 
-          <StaggerGroup className="mt-10 grid gap-6 md:grid-cols-3" stagger={0.1}>
+          <StaggerGroup className="mt-10 grid gap-6 md:grid-cols-3" stagger={0.07}>
             {products.map((p) => (
               <StaggerItem key={p.name} preset="scale" className="h-full">
                 <SpotlightCard className="h-full">
@@ -437,7 +472,7 @@ export default function Home() {
                       </p>
                       <BuyButton
                         message={"Hi, I want to buy: " + p.name}
-                        className="mt-4 inline-block rounded-full bg-forest px-5 py-2.5 text-center text-sm font-medium text-white transition-colors duration-300 hover:bg-mango"
+                        className="btn-press mt-4 inline-block rounded-full bg-forest px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-mango"
                       />
                     </div>
                   </div>
@@ -452,14 +487,8 @@ export default function Home() {
       <section className="relative overflow-hidden bg-mango/15 py-12">
         <div className="container-x relative text-center">
           <Reveal preset="scale">
-            <span className="relative inline-block overflow-hidden rounded-full bg-white px-4 py-1 text-xs font-semibold uppercase tracking-wide text-mango shadow-warm">
+            <span className="inline-block rounded-full bg-white px-4 py-1 text-xs font-semibold uppercase tracking-wide text-mango shadow-warm">
               Seasonal Fruit
-              {animate && (
-                <span
-                  aria-hidden="true"
-                  className="pointer-events-none absolute inset-y-0 left-0 w-8 bg-mango/25 blur-[6px] animate-sheen"
-                />
-              )}
             </span>
             <p className="mt-4 font-display text-2xl font-semibold text-forest">
               Fresh Kesar Mangoes Available <span className="text-kesar">April to June</span>
@@ -476,10 +505,9 @@ export default function Home() {
         <div className="container-x">
           <Reveal preset="scale">
             <div className="mx-auto max-w-2xl rounded-blob bg-white p-10 text-center shadow-warm">
-              <SplitText
+              <MaskReveal
                 as="h2"
                 text="Want to Order?"
-                trigger="view"
                 className="font-display text-3xl font-bold text-forest"
               />
               <p className="mt-4 leading-relaxed text-gray-700">
@@ -490,7 +518,7 @@ export default function Home() {
                 <BuyButton
                   label="Contact for Pricing"
                   message="Hi, please share your current prices."
-                  className="inline-block rounded-full bg-mango px-8 py-3 font-medium text-white shadow-lift transition-colors duration-300 hover:bg-forest"
+                  className="btn-press inline-block rounded-full bg-mango px-8 py-3 font-medium text-white shadow-lift hover:bg-forest"
                 />
               </Magnetic>
             </div>
@@ -500,7 +528,7 @@ export default function Home() {
 
       {/* ---------- BADGES ---------- */}
       <section className="bg-forest py-6 text-cream">
-        <Marquee speed={24} reverse fade>
+        <Marquee speed={44} reverse fade>
           {badges.map((b) => (
             <span key={b} className="flex shrink-0 items-center gap-3 whitespace-nowrap font-medium tracking-wide">
               <span aria-hidden="true" className="text-sage">&#10003;</span>
@@ -559,23 +587,15 @@ export default function Home() {
         <div className="container-x">
           <SectionHeading>What Our Customers Say</SectionHeading>
 
-          <StaggerGroup className="mt-10 grid gap-6 md:grid-cols-3" stagger={0.1}>
+          <StaggerGroup className="mt-10 grid gap-6 md:grid-cols-3" stagger={0.07}>
             {testimonials.map((r) => (
               <StaggerItem key={r.name} preset="scale" className="h-full">
-                <TiltCard className="h-full">
-                  <div className="h-full rounded-blob bg-white p-6 shadow-warm card-lift">
-                    <StaggerGroup className="flex gap-0.5 text-mango" stagger={0.07} amount={0.6}>
-                      {[0, 1, 2, 3, 4].map((i) => (
-                        <StaggerItem key={i} preset="scale" duration={0.35}>
-                          &#9733;
-                        </StaggerItem>
-                      ))}
-                    </StaggerGroup>
+                <div className="h-full rounded-blob bg-white p-6 shadow-warm card-lift">
+                    <div className="text-mango">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
                     <p className="mt-3 leading-relaxed text-gray-700">"{r.text}"</p>
                     <p className="mt-4 font-display font-semibold text-forest">{r.name}</p>
                     <p className="text-sm text-gray-500">{r.place}</p>
-                  </div>
-                </TiltCard>
+                </div>
               </StaggerItem>
             ))}
           </StaggerGroup>

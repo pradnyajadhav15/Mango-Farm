@@ -1,46 +1,43 @@
 import { useRef } from "react";
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
-import { useMotionSafe } from "./useMotionSafe";
+import { useMotionSafe, useFinePointer, SPRING } from "./useMotionSafe";
 
 /**
- * Scroll-linked vertical drift for decorative layers.
+ * Scroll-linked vertical drift for imagery.
  *
- * Only ever wrap imagery or ornament in this - body copy that slides at a
- * different speed than the column around it is hard to read, so headings
- * and paragraphs stay put.
+ * Deliberately small - 7% of the element's height, down from 12. Parallax
+ * works when you notice the depth and not the effect; past roughly 10% the
+ * layer visibly slides against everything around it, which is the point at
+ * which it stops reading as a photograph sitting behind the page.
  *
- * `distance` is in percent of the element's own height, kept small on
- * purpose so the foreground and background never visibly desync.
+ * Off entirely below tablet width. On a phone the viewport is short enough
+ * that a layer moving against the scroll reads as a rendering fault, and it
+ * costs a compositor layer on the device least able to spare one.
+ *
+ * Only ever wrap imagery or ornament in this. Body copy that slides at a
+ * different speed than its own column is hard to read.
  */
 export default function Parallax({
   children,
-  distance = 12,
+  distance = 7,
   className = "",
   offset = ["start end", "end start"],
 }) {
   const ref = useRef(null);
   const animate = useMotionSafe();
+  const fine = useFinePointer();
   const { scrollYProgress } = useScroll({ target: ref, offset });
   const raw = useTransform(scrollYProgress, [0, 1], [distance, -distance]);
-  const y = useSpring(raw, { stiffness: 120, damping: 30, mass: 0.4 });
+  const y = useSpring(raw, SPRING.glide);
 
-  if (!animate) {
-    return <div className={className}>{children}</div>;
-  }
+  // One element tree either way - see SpotlightCard for why.
+  const active = animate && fine;
 
   return (
     <div ref={ref} className={className}>
-      <motion.div style={{ y, willChange: "transform" }}>
+      <motion.div style={active ? { y, willChange: "transform" } : undefined}>
         {children}
       </motion.div>
     </div>
   );
-}
-
-/**
- * Same idea, but the caller supplies the transform. Used by the hero, where
- * the image needs to drift and fade on one shared scroll progress.
- */
-export function useSectionScroll(ref, offset = ["start start", "end start"]) {
-  return useScroll({ target: ref, offset });
 }

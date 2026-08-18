@@ -1,8 +1,12 @@
 import { motion } from "framer-motion";
-import { useMotionSafe, EASE } from "./useMotionSafe";
+import { useMotionSafe, EASE, DUR, VIEWPORT } from "./useMotionSafe";
 
 /**
  * Reveals a headline word by word, each word rising out of its own mask.
+ *
+ * Reserved for the two image heroes. Everything else on the site uses
+ * MaskReveal, which rises as one line - so when this does run, it reads as
+ * the page's opening statement rather than as the way headings behave.
  * The text is never re-written or re-cased - it is split on spaces only,
  * so Hindi and Marathi headlines split exactly the same way English does.
  *
@@ -15,8 +19,8 @@ export default function SplitText({
   as: Tag = "span",
   className = "",
   delay = 0,
-  stagger = 0.055,
-  duration = 0.75,
+  stagger = 0.07,
+  duration = DUR.lg,
   y = "110%",
   trigger = "load",
 }) {
@@ -29,16 +33,24 @@ export default function SplitText({
 
   const motionProps =
     trigger === "view"
-      ? { whileInView: "show", viewport: { once: true, amount: 0.4 } }
+      ? { whileInView: "show", viewport: VIEWPORT }
       : { animate: "show" };
 
   return (
     <Tag className={className}>
+      {/* The orchestration lives in the parent's own variants. Passing
+          staggerChildren through a bare `transition` prop looks equivalent
+          but is silently ignored: with no variants map of its own, the
+          parent never resolves a variant to attach the timing to, and the
+          words appear all at once instead of rising in sequence. */}
       <motion.span
         className="inline"
         initial="hidden"
         {...motionProps}
-        transition={{ staggerChildren: stagger, delayChildren: delay }}
+        variants={{
+          hidden: {},
+          show: { transition: { staggerChildren: stagger, delayChildren: delay } },
+        }}
       >
         {words.map((word, i) => (
           <span key={word + i}>
@@ -52,7 +64,7 @@ export default function SplitText({
                   hidden: { y, opacity: 0 },
                   show: { y: "0%", opacity: 1 },
                 }}
-                transition={{ duration, ease: EASE }}
+                transition={{ duration, ease: EASE.out }}
               >
                 {word}
               </motion.span>

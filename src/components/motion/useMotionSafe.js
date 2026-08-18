@@ -1,4 +1,7 @@
+import { useEffect, useState } from "react";
 import { useReducedMotion } from "framer-motion";
+
+export { EASE, DUR, DIST, SPRING, VIEWPORT } from "./tokens";
 
 /**
  * One place to decide whether motion should run.
@@ -12,8 +15,23 @@ export function useMotionSafe() {
   return !useReducedMotion();
 }
 
-/** Shared easing so every reveal on the page shares one hand. */
-export const EASE = [0.22, 1, 0.36, 1];
+/**
+ * True only for a real pointer on a screen wide enough for the effect to
+ * land. Guards the two effects that have no meaning without a cursor -
+ * magnetic pull and card tilt - and keeps scroll-linked parallax off phones,
+ * where a layer sliding against the scroll reads as a rendering fault rather
+ * than as depth.
+ */
+export function useFinePointer() {
+  const [fine, setFine] = useState(false);
 
-/** Slower, heavier easing for large surfaces (hero image, pinned cards). */
-export const EASE_SOFT = [0.16, 1, 0.3, 1];
+  useEffect(() => {
+    const mq = window.matchMedia("(hover: hover) and (pointer: fine) and (min-width: 768px)");
+    const sync = () => setFine(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
+
+  return fine;
+}
