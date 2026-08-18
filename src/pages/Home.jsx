@@ -6,7 +6,6 @@ import { useLang } from "../LanguageContext";
 import DeliveryChecker from "../components/DeliveryChecker";
 import BoxCalculator from "../components/BoxCalculator";
 import Reveal from "../components/Reveal";
-import HeroArt from "../components/HeroArt";
 import {
   SplitText,
   MaskReveal,
@@ -178,9 +177,8 @@ function Hero({ t }) {
   });
   const eased = useSpring(scrollYProgress, SPRING.glide);
 
-  // Two speeds, both gentle. The drawn scene lags the copy slightly, which
-  // is all the depth a flat gradient needs.
-  const shapesY = useTransform(eased, [0, 1], ["0%", "-10%"]);
+  // The copy lifts away over the footage; the footage itself holds still,
+  // since a video already carries its own motion.
   const copyY = useTransform(eased, [0, 1], ["0%", "18%"]);
   const copyFade = useTransform(eased, [0, 0.7], [1, 0]);
 
@@ -227,17 +225,12 @@ function Hero({ t }) {
         />
       )}
 
-      {/* Brand wash over the footage - the clip is cream and mid-green, which
-          white type cannot sit on. Multiply keeps the leaves reading as
-          leaves instead of flattening them behind a grey scrim. */}
-      <div className="absolute inset-0 bg-[linear-gradient(104deg,#F0761B_0%,#F59216_38%,#F9B216_68%,#FBC81C_100%)] opacity-[0.82] mix-blend-multiply" />
-      {/* and a light vignette purely for headline contrast */}
-      <div className="absolute inset-0 bg-[radial-gradient(70%_60%_at_50%_45%,rgba(120,45,0,0.30)_0%,rgba(120,45,0,0.05)_70%)]" />
-
-      {/* The drawn scene, drifting a little slower than the copy above it. */}
-      <motion.div className="absolute inset-0" style={animate ? { y: shapesY } : undefined}>
-        <HeroArt foliage={false} />
-      </motion.div>
+      {/* No colour wash over the footage - it plays at its own colour.
+          What stays is a neutral scrim behind the type only: the clip's
+          lower half is near-white, and white type on it is unreadable.
+          Kept as low as contrast allows and pinned to the centre band, so
+          the leaves top and bottom stay untouched. */}
+      <div className="absolute inset-0 bg-[radial-gradient(58%_42%_at_50%_44%,rgba(20,12,4,0.46)_0%,rgba(20,12,4,0.22)_55%,rgba(20,12,4,0)_100%)]" />
 
       <motion.div
         className="relative z-10 mx-auto max-w-4xl px-5 pt-16 md:pt-8"
