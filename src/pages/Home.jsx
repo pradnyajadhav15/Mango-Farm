@@ -232,9 +232,16 @@ function Hero({ t }) {
           the leaves top and bottom stay untouched. */}
       <div className="absolute inset-0 bg-[radial-gradient(58%_42%_at_50%_44%,rgba(20,12,4,0.46)_0%,rgba(20,12,4,0.22)_55%,rgba(20,12,4,0)_100%)]" />
 
+      {/* The copy centres in the space BELOW the fixed chrome, not in the
+          whole section. Centring in the section put the first line under the
+          navbar on shorter viewports - and browser zoom makes any viewport
+          shorter - which is what was clipping the headline. */}
       <motion.div
-        className="relative z-10 mx-auto max-w-4xl px-5 pt-16 md:pt-8"
-        style={animate ? { y: copyY, opacity: copyFade } : undefined}
+        className="relative z-10 mx-auto max-w-4xl px-5"
+        style={{
+          paddingTop: "calc(var(--mf-banner-h, 0px) + var(--mf-nav-h, 96px))",
+          ...(animate ? { y: copyY, opacity: copyFade } : {}),
+        }}
       >
         {/* BEAT 2 - the headline. The only word-by-word split on the site;
             everything else rises as one piece, so this reads as the moment
@@ -257,21 +264,6 @@ function Hero({ t }) {
           duration={0.75}
           className="mx-auto mt-5 block max-w-2xl font-sans text-base font-normal not-italic text-white/90 [text-shadow:0_1px_10px_rgba(150,66,0,0.25)] md:text-lg"
         />
-
-        {/* BEAT 4 - the call to action, once there is something to act on. */}
-        <motion.div
-          initial={animate ? { opacity: 0, y: DIST.sm } : false}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: DUR.md, delay: 1.25, ease: EASE.out }}
-        >
-          <Magnetic className="mt-8" strength={10}>
-            <BuyButton
-              message="Hi, I want to buy your organic Kesar mangoes."
-              className="btn-press group inline-flex items-center gap-3 rounded-full bg-forest py-2 pl-2 pr-7 font-medium text-white shadow-[0_14px_30px_-12px_rgba(31,92,11,0.75)] hover:bg-forestdark"
-              icon
-            />
-          </Magnetic>
-        </motion.div>
       </motion.div>
 
       {/* BEAT 5 - last, and only once the frame has settled: the page keeps

@@ -31,10 +31,16 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Keep the spacer exactly as tall as the bar, even as the logo shrinks
+  // Keep the spacer exactly as tall as the bar, even as the logo shrinks,
+  // and publish the height as --mf-nav-h. The bar is fixed, so anything that
+  // has to sit clear of it - the hero's copy, most of all - needs to know how
+  // tall it currently is rather than guessing.
   useEffect(() => {
     const measure = () => {
-      if (barRef.current) setBarHeight(barRef.current.offsetHeight);
+      if (!barRef.current) return;
+      const h = barRef.current.offsetHeight;
+      setBarHeight(h);
+      document.documentElement.style.setProperty("--mf-nav-h", h + "px");
     };
     measure();
     window.addEventListener("resize", measure);
