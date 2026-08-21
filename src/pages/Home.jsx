@@ -191,7 +191,7 @@ function Hero({ t }) {
           The gradient stays as the base layer: it paints instantly, covers
           the moment before the video decodes, and is what remains if the
           video fails or the browser refuses to autoplay. */}
-      <div className="absolute inset-0 bg-[linear-gradient(104deg,#F0761B_0%,#F59216_38%,#F9B216_68%,#FBC81C_100%)]" />
+      <div className="absolute inset-0 bg-[linear-gradient(104deg,#9E2F1F_0%,#F1564A_34%,#E78D3A_68%,#F7A21A_100%)]" />
 
       {/* The footage sits on top of it. Muted, inline and looping, so it
           autoplays under every current browser policy. Reduced motion gets
@@ -299,7 +299,7 @@ export default function Home() {
       {/* ---------- FREE DELIVERY STRIP ----------
           The one promise worth repeating, so it repeats: a ticker that
           holds still the moment a pointer or the keyboard reaches it. */}
-      <div className="relative overflow-hidden bg-mango py-3 font-medium tracking-wide text-white">
+      <div className="relative overflow-hidden bg-mango py-3 font-medium tracking-wide text-ink">
         <Marquee speed={52} repeat={3} fade>
           <span className="flex shrink-0 items-center gap-10 whitespace-nowrap">
             Free Delivery on All Orders &mdash; Farm Fresh, Straight to Your Door!
@@ -442,7 +442,7 @@ export default function Home() {
                     <div className="flex flex-1 flex-col p-5">
                       <h3 className="font-display text-lg font-semibold text-forest">{p.name}</h3>
                       <p className="mt-2 flex-1 text-sm leading-relaxed text-gray-600">{p.desc}</p>
-                      <p className="mt-3 inline-flex w-fit rounded-full bg-mango/15 px-3 py-1 text-xs font-semibold text-mango">
+                      <p className="mt-3 inline-flex w-fit rounded-full bg-mango/20 px-3 py-1 text-xs font-semibold text-forest">
                         Free Delivery
                       </p>
                       <BuyButton
@@ -462,7 +462,7 @@ export default function Home() {
       <section className="relative overflow-hidden bg-mango/15 py-12">
         <div className="container-x relative text-center">
           <Reveal preset="scale">
-            <span className="inline-block rounded-full bg-white px-4 py-1 text-xs font-semibold uppercase tracking-wide text-mango shadow-warm">
+            <span className="inline-block rounded-full bg-white px-4 py-1 text-xs font-semibold uppercase tracking-wide text-forest shadow-warm">
               Seasonal Fruit
             </span>
             <p className="mt-4 font-display text-2xl font-semibold text-forest">
@@ -493,7 +493,7 @@ export default function Home() {
                 <BuyButton
                   label="Contact for Pricing"
                   message="Hi, please share your current prices."
-                  className="btn-press inline-block rounded-full bg-mango px-8 py-3 font-medium text-white shadow-lift hover:bg-forest"
+                  className="btn-press inline-block rounded-full bg-forest px-8 py-3 font-medium text-white shadow-lift hover:bg-forestdark"
                 />
               </Magnetic>
             </div>
@@ -525,7 +525,7 @@ export default function Home() {
               steps={steps}
               renderStep={(s) => (
                 <div className="mx-auto max-w-2xl rounded-blob bg-white p-8 text-center shadow-warmlg ring-1 ring-sage/25">
-                  <div className="mx-auto grid h-14 w-14 place-items-center rounded-full bg-mango font-display text-2xl font-bold text-white shadow-lift">
+                  <div className="mx-auto grid h-14 w-14 place-items-center rounded-full bg-mango font-display text-2xl font-bold text-ink shadow-lift">
                     {s.n}
                   </div>
                   <h3 className="mt-4 font-display text-lg font-semibold text-forest">{s.title}</h3>

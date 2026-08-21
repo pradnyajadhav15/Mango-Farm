@@ -3,7 +3,17 @@
 @tailwind utilities;
 
 html { scroll-behavior: smooth; }
-body { margin: 0; background: #FFF8EE; color: #2B2118; }
+body { margin: 0; background: #FFF7EC; color: #3B1A12; }
+
+/* Retro-serif display setting.
+   WONK 1 swaps in the quirky angled terminals and the curled leg forms;
+   SOFT rounds the corners off; a high optical size gives the heavier
+   stroke contrast a display face wants. Together these are as close as a
+   free face gets to the reference lettering. */
+.font-display,
+h1, h2, h3 {
+  font-variation-settings: "SOFT" 100, "WONK" 1, "opsz" 144;
+}
 
 @layer utilities {
   .container-x { @apply max-w-6xl mx-auto px-5 md:px-8; }
@@ -60,12 +70,12 @@ body { margin: 0; background: #FFF8EE; color: #2B2118; }
 
   /* Warm gradient section backdrop */
   .bg-orchard {
-    background: linear-gradient(160deg, #FFF8EE 0%, #FBEBD0 55%, #F6D8B8 100%);
+    background: linear-gradient(160deg, #FFF7EC 0%, #FFEBD2 55%, #F0A158 100%);
   }
 
   /* Text gradient for display headings */
   .text-kesar {
-    background: linear-gradient(95deg, #E8A04C 0%, #C1443A 90%);
+    background: linear-gradient(95deg, #F7A21A 0%, #F1564A 90%);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
@@ -73,7 +83,7 @@ body { margin: 0; background: #FFF8EE; color: #2B2118; }
 
   /* Decorative dotted divider */
   .dot-rule {
-    background-image: radial-gradient(#A8C97F 1.5px, transparent 1.5px);
+    background-image: radial-gradient(#E78D3A 1.5px, transparent 1.5px);
     background-size: 14px 14px;
     height: 14px;
   }
@@ -117,7 +127,7 @@ body { margin: 0; background: #FFF8EE; color: #2B2118; }
   button:focus-visible,
   summary:focus-visible,
   [tabindex]:focus-visible {
-    outline: 3px solid #3B6D11;
+    outline: 3px solid #9E2F1F;
     outline-offset: 3px;
     border-radius: 8px;
   }

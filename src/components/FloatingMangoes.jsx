@@ -18,7 +18,7 @@ function Mango({ className = "", style = {} }) {
       />
       <path
         d="M33 9c1-4 4-7 9-8-1 5-4 8-9 9z"
-        fill="#3B6D11"
+        fill="#9E2F1F"
       />
     </svg>
   );
@@ -33,7 +33,7 @@ function Leaf({ className = "", style = {} }) {
       />
       <path
         d="M8 29C22 18 40 10 58 6"
-        stroke="#27500A"
+        stroke="#7E2416"
         strokeWidth="1.5"
         fill="none"
         opacity="0.45"

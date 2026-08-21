@@ -11,7 +11,7 @@ export default function BoxCalculator() {
   const orderMsg = "Hi, I want to order " + dozens + " dozen Kesar mangoes (approx Rs " + total + ").";
 
   const stepBtn =
-    "grid h-11 w-11 place-items-center rounded-full bg-mango/15 text-xl font-bold text-mango transition hover:bg-mango hover:text-white active:scale-90 disabled:opacity-40";
+    "grid h-11 w-11 place-items-center rounded-full bg-mango/20 text-xl font-bold text-forest transition hover:bg-mango hover:text-ink active:scale-90 disabled:opacity-40";
 
   return (
     <div className="mx-auto max-w-md rounded-blob bg-white p-7 text-center shadow-warm">
@@ -65,7 +65,7 @@ export default function BoxCalculator() {
         href={waLink(orderMsg)}
         target="_blank"
         rel="noreferrer"
-        className="mt-5 inline-block rounded-full bg-mango px-7 py-2.5 text-sm font-medium text-white shadow-warm transition hover:bg-forest"
+        className="mt-5 inline-block rounded-full bg-forest px-7 py-2.5 text-sm font-medium text-white shadow-warm transition hover:bg-forestdark"
       >
         Order on WhatsApp
       </a>

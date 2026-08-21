@@ -69,12 +69,12 @@ function ThreadNode({ index, count, progress, animate, children }) {
   const hue = useTransform(
     progress,
     [Math.max(at - span, 0), at],
-    ["#A8C97F", "#E8A04C"]
+    ["#E78D3A", "#F7A21A"]
   );
   const ring = useTransform(
     progress,
     [Math.max(at - span, 0), at],
-    ["rgba(168,201,127,0)", "rgba(232,160,76,0.22)"]
+    ["rgba(231,141,58,0)", "rgba(247,162,26,0.24)"]
   );
 
   return (

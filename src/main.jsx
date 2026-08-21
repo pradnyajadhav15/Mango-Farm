@@ -1,8 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import "@fontsource/fraunces/400.css";
-import "@fontsource/fraunces/600.css";
-import "@fontsource/fraunces/700.css";
+// The full variable build, so the SOFT and WONK axes are available - they
+// are what give Fraunces its retro, slightly wonky serif character.
+import "@fontsource-variable/fraunces/full.css";
 import "@fontsource/dm-sans/400.css";
 import "@fontsource/dm-sans/500.css";
 import "@fontsource/dm-sans/700.css";

@@ -19,7 +19,7 @@ export default defineConfig({
         display: 'standalone',
         orientation: 'portrait',
         background_color: '#FFF8E7',
-        theme_color: '#F59E0B',
+        theme_color: '#F7A21A',
         lang: 'en',
         dir: 'ltr',
         categories: ['food', 'shopping', 'lifestyle'],

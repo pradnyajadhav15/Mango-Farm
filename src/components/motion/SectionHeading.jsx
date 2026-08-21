@@ -25,7 +25,7 @@ export default function SectionHeading({
     <div className={(centered ? "text-center " : "") + className}>
       {eyebrow ? (
         <motion.p
-          className="mb-3 text-[11px] font-semibold uppercase tracking-[0.28em] text-mango"
+          className="mb-3 text-[11px] font-semibold uppercase tracking-[0.28em] text-forest"
           initial={animate ? { opacity: 0 } : false}
           whileInView={{ opacity: 1 }}
           viewport={VIEWPORT}
