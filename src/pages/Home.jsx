@@ -274,29 +274,12 @@ function Hero({ t }) {
         </motion.div>
       </motion.div>
 
-      {/* The base curve: the page ground sweeping up at both edges. It is
-          part of the frame rather than a divider, so it does not animate -
-          a moving horizon under a settling headline reads as instability.
-
-          The shadow above it earns its place: the curve is the page's own
-          cream, and wherever the footage runs pale the two match and the
-          sweep disappears. The shadow gives it an edge to read against
-          whatever frame happens to be playing. */}
-      <svg
-        aria-hidden="true"
-        viewBox="0 0 1440 140"
-        preserveAspectRatio="none"
-        className="absolute inset-x-0 bottom-0 h-[58px] w-full drop-shadow-[0_-6px_16px_rgba(23,45,10,0.28)] md:h-[104px]"
-      >
-        <path d="M0 26C260 96 520 132 720 132S1180 96 1440 26v114H0Z" fill="#FFF8EE" />
-      </svg>
-
       {/* BEAT 5 - last, and only once the frame has settled: the page keeps
           going. Outer layer owns the scroll fade, inner owns the entrance,
           so the two are never writing opacity at the same time. */}
       <motion.div
         aria-hidden="true"
-        className="absolute bottom-[70px] left-1/2 -translate-x-1/2 md:bottom-[126px]"
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 md:bottom-10"
         style={animate ? { opacity: copyFade } : undefined}
       >
         <motion.span
