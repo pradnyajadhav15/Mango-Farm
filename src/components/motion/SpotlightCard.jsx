@@ -65,7 +65,7 @@ export default function SpotlightCard({ children, className = "", max = 3 }) {
         style={{
           opacity: lit ? 1 : 0,
           background:
-            "radial-gradient(240px circle at var(--gx) var(--gy), rgba(232,160,76,0.13), transparent 70%)",
+            "radial-gradient(240px circle at var(--gx) var(--gy), rgba(247,162,26,0.15), transparent 70%)",
           "--gx": glowX,
           "--gy": glowY,
         }}

@@ -44,7 +44,7 @@ export default function DeliveryChecker() {
         />
         <button
           type="submit"
-          className="rounded-xl bg-mango px-5 py-2.5 text-sm font-semibold text-white shadow-warm transition hover:bg-forest hover:shadow-lift"
+          className="rounded-xl bg-forest px-5 py-2.5 text-sm font-semibold text-white shadow-warm transition hover:bg-forestdark hover:shadow-lift"
         >
           Check
         </button>

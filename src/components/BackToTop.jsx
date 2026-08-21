@@ -37,7 +37,7 @@ export default function BackToTop() {
           cy="24"
           r={R}
           fill="none"
-          stroke="#E8A04C"
+          stroke="#F7A21A"
           strokeWidth="2.5"
           strokeLinecap="round"
           strokeDasharray={C}

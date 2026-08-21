@@ -66,7 +66,7 @@ export default function About() {
             </Reveal>
             <Reveal delay={0.12}>
               <h3 className="font-display text-2xl font-bold text-forest">Mr. Suresh Jadhav</h3>
-              <p className="mt-1 inline-block rounded-full bg-mango/15 px-3 py-1 text-sm font-medium text-mango">
+              <p className="mt-1 inline-block rounded-full bg-mango/20 px-3 py-1 text-sm font-medium text-forest">
                 Founder
               </p>
               <p className="mt-4 leading-relaxed text-gray-700">

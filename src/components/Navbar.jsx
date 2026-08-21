@@ -61,7 +61,7 @@ export default function Navbar() {
         (overHero
           ? "text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.5)] hover:text-mangolight"
           : isActive(to)
-          ? "text-mango"
+          ? "text-forest"
           : "text-forest hover:text-mango")
       }
     >
@@ -198,7 +198,7 @@ export default function Navbar() {
                         onClick={() => switchLang(code)}
                         className={
                           "flex w-full items-center justify-between px-4 py-2 text-left text-sm transition hover:bg-cream " +
-                          (lang === code ? "font-medium text-mango" : "text-forest")
+                          (lang === code ? "font-medium text-forest" : "text-gray-700")
                         }
                       >
                         {translations[code].label}
@@ -260,7 +260,7 @@ export default function Navbar() {
                   {t.nav.about}
                 </Link>
 
-                <p className="pt-3 text-xs font-semibold uppercase tracking-[0.16em] text-mango">
+                <p className="pt-3 text-xs font-semibold uppercase tracking-[0.16em] text-forest">
                   {t.nav.activities}
                 </p>
                 <div className="mt-1 border-l-2 border-sage/40 pl-3">

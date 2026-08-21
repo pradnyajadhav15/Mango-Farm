@@ -3,31 +3,43 @@ export default {
   content: ["./index.html", "./src/**/*.{js,jsx}"],
   theme: {
     extend: {
+      // "Tropical Treat". The five supplied colours are all mid-to-dark
+      // warm tones - there is no background value in the set and only one
+      // that carries text, so two creams are added for page ground and the
+      // darkest becomes the ink. Token NAMES are unchanged so the ~190
+      // usages across the site keep working; only the values move.
       colors: {
-        cream: "#FBEBD0",
-        creamlight: "#FFF8EE",
-        forest: "#3B6D11",
-        forestdark: "#27500A",
-        sage: "#A8C97F",
-        sagelight: "#D6E5C0",
-        mango: "#E8A04C",
-        mangolight: "#F6D8B8",
-        peach: "#F6D8B8",
-        ink: "#2B2118",
-        blush: "#C1443A",
+        cream: "#FFEBD2",       // added - no background exists in the palette
+        creamlight: "#FFF7EC",  // added
+        forest: "#9E2F1F",      // supplied. The only text-safe colour: 6.8:1 on cream
+        forestdark: "#7E2416",  // darkened for hover
+        sage: "#E78D3A",        // supplied
+        sagelight: "#F7C89A",   // tint of the above, for hairlines
+        mango: "#F7A21A",       // supplied - the primary accent
+        mangolight: "#F0A158",  // supplied
+        peach: "#F0A158",       // supplied
+        ink: "#3B1A12",         // warm near-black, pulled toward #9E2F1F
+        blush: "#F1564A",       // supplied - the coral pop
+        // Tailwind's default grey is cool and fights a wholly warm palette,
+        // so body copy runs on a warm neutral instead.
+        gray: {
+          50:  "#FAF7F5", 100: "#F2ECE8", 200: "#E6DBD4", 300: "#D3C2B8",
+          400: "#A89184", 500: "#846A5C", 600: "#6B5245", 700: "#574137",
+          800: "#43312A", 900: "#33251F",
+        },
       },
       fontFamily: {
         sans: ['"DM Sans"', 'system-ui', 'sans-serif'],
-        display: ['Fraunces', 'Georgia', 'serif'],
+        display: ['"Fraunces Variable"', 'Fraunces', 'Georgia', 'serif'],
       },
       borderRadius: {
         soft: "1.25rem",
         blob: "2rem",
       },
       boxShadow: {
-        warm: "0 10px 30px -12px rgba(43, 33, 24, 0.18)",
-        warmlg: "0 24px 50px -20px rgba(43, 33, 24, 0.28)",
-        lift: "0 18px 40px -16px rgba(232, 160, 76, 0.45)",
+        warm: "0 10px 30px -12px rgba(59, 26, 18, 0.16)",
+        warmlg: "0 24px 50px -20px rgba(59, 26, 18, 0.26)",
+        lift: "0 18px 40px -16px rgba(247, 162, 26, 0.48)",
       },
       keyframes: {
         float: {
