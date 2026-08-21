@@ -1,0 +1,17 @@
+# Normalise line endings on the way into the repo, check out LF everywhere.
+# Without this, npm install on Windows rewrites every line of
+# package-lock.json and the file shows up as a 7,600-line change containing
+# nothing, burying real edits in the diff.
+* text=auto eol=lf
+
+# Binary assets: never touched, never diffed as text.
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.ico  binary
+*.webp binary
+*.mp4  binary
+*.webm binary
+*.woff binary
+*.woff2 binary
